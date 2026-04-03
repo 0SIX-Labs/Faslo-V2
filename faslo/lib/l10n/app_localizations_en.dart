@@ -18,7 +18,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcomeTo => 'Welcome to';
 
   @override
-  String get clarity => 'Clarity.';
+  String get clarity => 'Faslo.';
 
   @override
   String get welcomeSubtitle =>
@@ -273,49 +273,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get phaseFedState => 'Fed State';
 
   @override
-  String get phaseFedStateDesc => 'Your body is processing your last meal.';
+  String get phaseFedStateDesc => 'Nourishing your body. The journey awaits.';
 
   @override
-  String get phaseCatabolic => 'Catabolic';
+  String get phaseCatabolic => 'Awakening';
 
   @override
   String get phaseCatabolicDesc =>
-      'Insulin levels drop. Fat stores begin to activate.';
+      'Your body begins to let go. Fat stores stir.';
 
   @override
-  String get phaseFatBurning => 'Fat Burning';
+  String get phaseFatBurning => 'Burning';
 
   @override
   String get phaseFatBurningDesc =>
-      'Your body switches to burning fat for fuel.';
+      'Fueling from within. You\'re becoming lighter.';
 
   @override
-  String get phaseKetosis => 'Ketosis';
+  String get phaseKetosis => 'Clarity';
 
   @override
-  String get phaseKetosisDesc =>
-      'Fat burning peaks. Mental clarity often follows.';
+  String get phaseKetosisDesc => 'Mind sharpens. Energy flows freely.';
 
   @override
-  String get phaseDeepKetosis => 'Deep Ketosis';
+  String get phaseDeepKetosis => 'Deep Flow';
 
   @override
   String get phaseDeepKetosisDesc =>
-      'Ketone production is high. Energy is stable.';
+      'Profound stillness. Your body knows the way.';
 
   @override
-  String get phaseAutophagy => 'Autophagy';
+  String get phaseAutophagy => 'Renewal';
 
   @override
   String get phaseAutophagyDesc =>
-      'Cellular cleanup begins. Your cells are renewing.';
+      'Old cells make way for new. You\'re transforming.';
 
   @override
-  String get phaseImmuneReset => 'Immune Reset';
+  String get phaseImmuneReset => 'Reset';
 
   @override
   String get phaseImmuneResetDesc =>
-      'Extended fast triggering deep immune regeneration.';
+      'Deep restoration. Your body rebuilds itself.';
 
   @override
   String get planCircadian => 'Circadian Rhythm';
@@ -427,4 +426,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutTitle => 'About Faslo';
+
+  @override
+  String get shareTitle => 'Share Your Achievement';
+
+  @override
+  String get shareButton => 'Share';
+
+  @override
+  String get shareDone => 'Done';
+
+  @override
+  String shareStreak(int n) {
+    return '$n day streak 🔥';
+  }
+
+  @override
+  String get shareMessage => 'Stay consistent.\nYour body thanks you.';
+
+  @override
+  String get shareBranding => 'FASLO';
+
+  @override
+  String get shareCompleted => 'FAST COMPLETED';
 }

@@ -18,8 +18,8 @@ class ThemeProvider extends ChangeNotifier {
         return AppTheme.sageMint();
       case AppThemeMode.kineticObsidian:
         return AppTheme.kineticObsidian();
-      case AppThemeMode.zenPaper:
-        return AppTheme.zenPaper();
+      case AppThemeMode.minimalMono:
+        return AppTheme.minimalMono();
       case AppThemeMode.minimalOled:
         return AppTheme.minimalOled();
     }

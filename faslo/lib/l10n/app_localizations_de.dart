@@ -18,7 +18,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get welcomeTo => 'Willkommen bei';
 
   @override
-  String get clarity => 'Klarheit.';
+  String get clarity => 'Faslo.';
 
   @override
   String get welcomeSubtitle =>
@@ -428,4 +428,27 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get aboutTitle => 'Über Faslo';
+
+  @override
+  String get shareTitle => 'Teile deinen Erfolg';
+
+  @override
+  String get shareButton => 'Teilen';
+
+  @override
+  String get shareDone => 'Fertig';
+
+  @override
+  String shareStreak(int n) {
+    return '$n Tage Serie 🔥';
+  }
+
+  @override
+  String get shareMessage => 'Bleib konsequent.\nDein Körper dankt es dir.';
+
+  @override
+  String get shareBranding => 'FASLO';
+
+  @override
+  String get shareCompleted => 'FASTEN ABGESCHLOSSEN';
 }

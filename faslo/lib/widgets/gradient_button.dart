@@ -173,18 +173,14 @@ class _GradientButtonState extends State<GradientButton>
             ),
           ],
         );
-      case AppThemeMode.zenPaper:
+      case AppThemeMode.minimalMono:
         return BoxDecoration(
-          color: colorScheme.primary,
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: colorScheme.primary.withValues(alpha: glowAlpha * 0.5),
-              blurRadius: 16 + (8 * _glowAnimation.value),
-              spreadRadius: 1 + (1 * _glowAnimation.value),
-              offset: const Offset(0, 2),
-            ),
-          ],
+          border: Border.all(
+            color: colorScheme.primary,
+            width: 1.5,
+          ),
         );
       case AppThemeMode.minimalOled:
         return BoxDecoration(

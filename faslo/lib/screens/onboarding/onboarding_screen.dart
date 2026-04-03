@@ -10,6 +10,7 @@ import '../../providers/settings_provider.dart';
 import '../../providers/fast_provider.dart';
 import '../../widgets/gradient_button.dart';
 import '../home/home_screen.dart';
+import '../../l10n/app_localizations.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -20,6 +21,7 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
+  late PageController _languagePageController;
   int _currentPage = 0;
   final TextEditingController _nameController = TextEditingController();
   String _selectedExperience = 'Beginner';
@@ -27,13 +29,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   FastingPlan? _selectedPlan;
 
   @override
+  void initState() {
+    super.initState();
+    _languagePageController = PageController(viewportFraction: 0.4);
+  }
+
+  @override
   void dispose() {
     _pageController.dispose();
+    _languagePageController.dispose();
     _nameController.dispose();
     super.dispose();
   }
 
   void _nextPage() {
+    // Validate name on first page before proceeding
+    if (_currentPage == 0 && _nameController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Please enter your name to continue'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
     if (_currentPage < 2) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
@@ -125,7 +146,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           Text(
-            'Clarity.',
+            AppLocalizations.of(context)!.clarity,
             style: GoogleFonts.lexend(
               fontSize: 32,
               fontWeight: FontWeight.w700,
@@ -168,23 +189,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: languages.map((lang) {
-              final isSelected =
-                  settingsProvider.locale.languageCode == lang['code'];
-              return ChoiceChip(
-                label: Text(lang['name']!),
-                selected: isSelected,
-                onSelected: (_) => settingsProvider.setLocale(lang['code']!),
-                selectedColor: colorScheme.primary,
-                labelStyle: TextStyle(
-                  color: isSelected ? Colors.white : colorScheme.onSurface,
-                ),
-              );
-            }).toList(),
-          ),
+          _buildLanguageCarousel(languages, settingsProvider, colorScheme),
           const SizedBox(height: 32),
           Text(
             'CHOOSE YOUR PATH',
@@ -211,8 +216,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
               const SizedBox(width: 12),
               _buildThemeCard(
-                'Zen Paper',
-                AppThemeMode.zenPaper,
+                'Minimal Mono',
+                AppThemeMode.minimalMono,
                 themeProvider,
               ),
             ],
@@ -283,116 +288,213 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         return const Color(0xFF3D7A5E);
       case AppThemeMode.kineticObsidian:
         return const Color(0xFFBEEE00);
-      case AppThemeMode.zenPaper:
-        return const Color(0xFF3D7A5E);
+      case AppThemeMode.minimalMono:
+        return const Color(0xFF000000);
       case AppThemeMode.minimalOled:
         return Colors.white;
     }
   }
 
+  Widget _buildLanguageCarousel(
+    List<Map<String, String>> languages,
+    SettingsProvider settingsProvider,
+    ColorScheme colorScheme,
+  ) {
+    final selectedIndex = languages.indexWhere(
+      (lang) => lang['code'] == settingsProvider.locale.languageCode,
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_languagePageController.hasClients && selectedIndex >= 0) {
+        _languagePageController.animateToPage(
+          selectedIndex,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+
+    return SizedBox(
+      height: 60,
+      child: PageView.builder(
+        controller: _languagePageController,
+        onPageChanged: (index) {
+          settingsProvider.setLocale(languages[index]['code']!);
+        },
+        itemCount: languages.length,
+        itemBuilder: (context, index) {
+          final lang = languages[index];
+          final isSelected =
+              settingsProvider.locale.languageCode == lang['code'];
+
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? colorScheme.primary
+                  : colorScheme.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: isSelected
+                  ? [
+                      BoxShadow(
+                        color: colorScheme.primary.withValues(alpha: 0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ]
+                  : [],
+            ),
+            child: Center(
+              child: AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 300),
+                style: TextStyle(
+                  fontSize: isSelected ? 18 : 14,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  color: isSelected ? Colors.white : colorScheme.onSurface,
+                ),
+                child: Text(lang['name']!),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildGoalsPage() {
     final colorScheme = Theme.of(context).colorScheme;
     final goals = [
-      {'key': 'weight', 'label': 'Weight Loss'},
-      {'key': 'metabolic', 'label': 'Metabolic Health'},
-      {'key': 'clarity', 'label': 'Mental Clarity'},
-      {'key': 'longevity', 'label': 'Longevity'},
+      {
+        'key': 'weight',
+        'label': 'Weight Loss',
+        'icon': Icons.monitor_weight_outlined
+      },
+      {
+        'key': 'metabolic',
+        'label': 'Metabolic Health',
+        'icon': Icons.favorite_border
+      },
+      {
+        'key': 'clarity',
+        'label': 'Mental Clarity',
+        'icon': Icons.psychology_outlined
+      },
+      {'key': 'longevity', 'label': 'Longevity', 'icon': Icons.timelapse},
     ];
     final experiences = ['Beginner', 'Intermediate', 'Advanced'];
 
-    return SingleChildScrollView(
+    return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 40),
+          const Spacer(flex: 2),
           Text(
             'What are your goals?',
             style: GoogleFonts.lexend(
-              fontSize: 28,
+              fontSize: 24,
               fontWeight: FontWeight.w700,
               color: colorScheme.onSurface,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           GridView.count(
             crossAxisCount: 2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 2.2,
             children: goals.map((goal) {
               final isSelected = _selectedGoals.contains(goal['key']);
               return GestureDetector(
                 onTap: () {
                   setState(() {
                     if (isSelected) {
-                      _selectedGoals.remove(goal['key']);
+                      _selectedGoals.remove(goal['key'] as String);
                     } else {
-                      _selectedGoals.add(goal['key']!);
+                      _selectedGoals.add(goal['key'] as String);
                     }
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? colorScheme.primary.withValues(alpha: 0.1)
+                        ? colorScheme.primary.withValues(alpha: 0.12)
                         : colorScheme.surfaceContainerHigh,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(14),
                     border: Border.all(
                       color:
                           isSelected ? colorScheme.primary : Colors.transparent,
-                      width: 2,
+                      width: 1.5,
                     ),
                   ),
-                  child: Center(
-                    child: Text(
-                      goal['label']!,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        goal['icon'] as IconData,
+                        size: 18,
                         color: isSelected
                             ? colorScheme.primary
-                            : colorScheme.onSurface,
+                            : colorScheme.onSurfaceVariant,
                       ),
-                    ),
+                      const SizedBox(width: 8),
+                      Text(
+                        goal['label'] as String,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: isSelected
+                              ? colorScheme.primary
+                              : colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               );
             }).toList(),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
           Text(
             'Your experience?',
             style: GoogleFonts.lexend(
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
               color: colorScheme.onSurface,
             ),
           ),
-          const SizedBox(height: 16),
-          Row(
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
             children: experiences.map((exp) {
               final isSelected = _selectedExperience == exp;
-              return Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: ChoiceChip(
-                  label: Text(exp),
-                  selected: isSelected,
-                  onSelected: (_) => setState(() => _selectedExperience = exp),
-                  selectedColor: colorScheme.primary,
-                  labelStyle: TextStyle(
-                    color: isSelected ? Colors.white : colorScheme.onSurface,
-                  ),
+              return ChoiceChip(
+                label: Text(exp, style: const TextStyle(fontSize: 13)),
+                selected: isSelected,
+                onSelected: (_) => setState(() => _selectedExperience = exp),
+                selectedColor: colorScheme.primary,
+                labelStyle: TextStyle(
+                  color: isSelected ? Colors.white : colorScheme.onSurface,
                 ),
+                visualDensity: VisualDensity.compact,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
               );
             }).toList(),
           ),
-          const SizedBox(height: 40),
+          const Spacer(flex: 3),
           GradientButton(
             text: 'Continue Journey',
             onPressed: _nextPage,
           ),
+          const SizedBox(height: 16),
         ],
       ),
     );

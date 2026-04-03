@@ -61,8 +61,8 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     _buildThemeCard(
-                      'Zen Paper',
-                      AppThemeMode.zenPaper,
+                      'Minimal Mono',
+                      AppThemeMode.minimalMono,
                       themeProvider,
                       colorScheme,
                     ),
@@ -296,8 +296,8 @@ class SettingsScreen extends StatelessWidget {
         return const Color(0xFF3D7A5E);
       case AppThemeMode.kineticObsidian:
         return const Color(0xFFBEEE00);
-      case AppThemeMode.zenPaper:
-        return const Color(0xFF3D7A5E);
+      case AppThemeMode.minimalMono:
+        return const Color(0xFF000000);
       case AppThemeMode.minimalOled:
         return Colors.white;
     }

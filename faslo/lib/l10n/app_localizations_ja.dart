@@ -18,7 +18,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get welcomeTo => 'ようこそ';
 
   @override
-  String get clarity => '明晰さへ。';
+  String get clarity => 'Faslo.';
 
   @override
   String get welcomeSubtitle => 'マインドフルな断食への旅がここから始まります。';
@@ -417,4 +417,27 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get aboutTitle => 'Fasloについて';
+
+  @override
+  String get shareTitle => '成果をシェア';
+
+  @override
+  String get shareButton => 'シェア';
+
+  @override
+  String get shareDone => '完了';
+
+  @override
+  String shareStreak(int n) {
+    return '$n日連続 🔥';
+  }
+
+  @override
+  String get shareMessage => '継続は力なり。\n体が応援しています。';
+
+  @override
+  String get shareBranding => 'FASLO';
+
+  @override
+  String get shareCompleted => '断食完了';
 }

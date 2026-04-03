@@ -18,7 +18,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get welcomeTo => '환영합니다';
 
   @override
-  String get clarity => '명확함으로.';
+  String get clarity => 'Faslo.';
 
   @override
   String get welcomeSubtitle => '마음챙김 단식을 향한 여정이 시작됩니다.';
@@ -417,4 +417,27 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get aboutTitle => 'Faslo 정보';
+
+  @override
+  String get shareTitle => '성과 공유하기';
+
+  @override
+  String get shareButton => '공유';
+
+  @override
+  String get shareDone => '완료';
+
+  @override
+  String shareStreak(int n) {
+    return '$n일 연속 🔥';
+  }
+
+  @override
+  String get shareMessage => '꾸준히 계속하세요.\n몸이 감사하고 있습니다.';
+
+  @override
+  String get shareBranding => 'FASLO';
+
+  @override
+  String get shareCompleted => '단식 완료';
 }

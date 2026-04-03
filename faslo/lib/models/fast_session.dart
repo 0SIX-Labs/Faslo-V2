@@ -1,9 +1,25 @@
-class FastSession {
+import 'package:hive/hive.dart';
+
+part 'fast_session.g.dart';
+
+@HiveType(typeId: 0)
+class FastSession extends HiveObject {
+  @HiveField(0)
   final String id;
+
+  @HiveField(1)
   final DateTime startTime;
+
+  @HiveField(2)
   final DateTime? endTime;
+
+  @HiveField(3)
   final String planRatio;
+
+  @HiveField(4)
   final int targetHours;
+
+  @HiveField(5)
   final bool completed;
 
   FastSession({

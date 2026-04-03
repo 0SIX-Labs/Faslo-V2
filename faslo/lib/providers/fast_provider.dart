@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:hive/hive.dart';
 import '../core/constants/pref_keys.dart';
 import '../core/constants/fasting_plans.dart';
+import '../core/utils/debounce.dart';
 import '../models/fast_session.dart';
 
 class FastProvider extends ChangeNotifier {
@@ -14,11 +16,32 @@ class FastProvider extends ChangeNotifier {
   Timer? _ticker;
   List<FastSession> _sessions = [];
 
+  // Debouncer for session saves (400ms delay)
+  final _sessionDebouncer = Debouncer(delay: const Duration(milliseconds: 400));
+
   FastingPlan get activePlan => _activePlan;
   DateTime? get fastStart => _fastStart;
   Duration get elapsed => _elapsed;
   bool get isFasting => _fastStart != null;
   List<FastSession> get sessions => List.unmodifiable(_sessions);
+
+  // Get recent sessions with limit (avoids loading entire dataset)
+  List<FastSession> getRecentSessions(int limit) {
+    final box = Hive.box<FastSession>('fast_sessions');
+    final allSessions = box.values.toList();
+    allSessions.sort((a, b) => b.startTime.compareTo(a.startTime));
+    return allSessions.take(limit).toList();
+  }
+
+  // Get sessions by specific date
+  List<FastSession> getSessionsByDate(DateTime date) {
+    final dateStr = _dayStr(date);
+    final box = Hive.box<FastSession>('fast_sessions');
+    return box.values
+        .where((session) => _dayStr(session.startTime) == dateStr)
+        .toList()
+      ..sort((a, b) => b.startTime.compareTo(a.startTime));
+  }
 
   // Streak = consecutive days with at least 1 completed fast
   int get streak {
@@ -57,12 +80,37 @@ class FastProvider extends ChangeNotifier {
         _fastStart = DateTime.tryParse(startStr);
         if (_fastStart != null) _startTicker();
       }
-      // Load sessions
-      final raw = prefs.getString(PrefKeys.fastSessions) ?? '[]';
-      final list = jsonDecode(raw) as List;
-      _sessions = list
-          .map((e) => FastSession.fromJson(e as Map<String, dynamic>))
-          .toList();
+
+      // Load sessions from Hive
+      final box = Hive.box<FastSession>('fast_sessions');
+      if (box.isEmpty) {
+        // Migration: Check for existing JSON data in SharedPreferences
+        final raw = prefs.getString(PrefKeys.fastSessions);
+        if (raw != null && raw.isNotEmpty && raw != '[]') {
+          try {
+            final list = jsonDecode(raw) as List;
+            final sessions = list
+                .map((e) => FastSession.fromJson(e as Map<String, dynamic>))
+                .toList();
+            // Save to Hive with timestamp-based key for ordering
+            for (int i = 0; i < sessions.length; i++) {
+              final session = sessions[i];
+              // Use timestamp as key prefix to maintain order
+              final key =
+                  '${session.startTime.millisecondsSinceEpoch}_${session.id}';
+              await box.put(key, session);
+            }
+            // Clear old JSON data
+            await prefs.remove(PrefKeys.fastSessions);
+          } catch (_) {
+            // Migration failed, start fresh
+          }
+        }
+      }
+
+      // Load only recent sessions into memory (limit to 100 for performance)
+      _sessions = getRecentSessions(100);
+
       notifyListeners();
     } catch (e) {
       // Use defaults on error
@@ -106,13 +154,17 @@ class FastProvider extends ChangeNotifier {
       targetHours: _activePlan.fastHours,
       completed: true,
     );
-    _sessions.insert(0, session);
     _fastStart = null;
     _elapsed = Duration.zero;
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(PrefKeys.activeFastStart);
-      await _saveSessions(prefs);
+      // Save to Hive with timestamp-based key for ordering
+      final box = Hive.box<FastSession>('fast_sessions');
+      final key = '${session.startTime.millisecondsSinceEpoch}_${session.id}';
+      await box.put(key, session);
+      // Reload recent sessions
+      _sessions = getRecentSessions(100);
     } catch (e) {
       // Continue even if save fails
     }
@@ -122,25 +174,31 @@ class FastProvider extends ChangeNotifier {
 
   Future<void> setActivePlan(FastingPlan plan) async {
     _activePlan = plan;
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(PrefKeys.activePlan, plan.ratio);
-    } catch (e) {
-      // Continue even if save fails
-    }
     notifyListeners();
+
+    // Debounce the disk write
+    await _sessionDebouncer.run(() async {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(PrefKeys.activePlan, plan.ratio);
+      } catch (e) {
+        // Continue even if save fails
+      }
+    });
   }
 
-  Future<void> _saveSessions(SharedPreferences prefs) async {
-    await prefs.setString(
-      PrefKeys.fastSessions,
-      jsonEncode(_sessions.map((s) => s.toJson()).toList()),
-    );
+  // Removed _saveSessions method - now using Hive directly
+
+  /// Flushes any pending debounced saves to disk.
+  /// Call this when the app is about to close or when immediate persistence is needed.
+  Future<void> flushPendingSaves() async {
+    await _sessionDebouncer.flush();
   }
 
   @override
   void dispose() {
     _ticker?.cancel();
+    _sessionDebouncer.dispose();
     super.dispose();
   }
 }

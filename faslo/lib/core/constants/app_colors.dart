@@ -38,17 +38,18 @@ class ObsidianColors {
   static const error = Color(0xFFFF7351);
 }
 
-// ── Zen Paper (Universal) ────────────────────────────────────────────────────
-class ZenPaperColors {
-  static const background = Color(0xFFFAFAF7);
-  static const surface = Color(0xFFF5F5F0);
-  static const surfaceCard = Color(0xFFEFEFE8);
-  static const surfaceSunken = Color(0xFFE8E8E0);
-  static const ink = Color(0xFF1C1C1A);
-  static const inkSecondary = Color(0xFF5A5A54);
-  static const inkMuted = Color(0xFF9A9A90);
-  static const outline = Color(0xFFCCCCC4);
-  static const accent = Color(0xFF3D7A5E);
+// ── Minimal Mono (Monochrome Line Style) ──────────────────────────────────────
+class MinimalMonoColors {
+  static const background = Color(0xFFFFFFFF);
+  static const surface = Color(0xFFFFFFFF);
+  static const surfaceCard = Color(0xFFFFFFFF);
+  static const surfaceSunken = Color(0xFFF8F8F8);
+  static const ink = Color(0xFF000000);
+  static const inkSecondary = Color(0xFF333333);
+  static const inkMuted = Color(0xFF666666);
+  static const outline = Color(0xFF000000);
+  static const outlineLight = Color(0xFFE0E0E0);
+  static const accent = Color(0xFF000000);
   static const onAccent = Color(0xFFFFFFFF);
-  static const error = Color(0xFFBA1A1A);
+  static const error = Color(0xFF000000);
 }

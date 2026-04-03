@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/app_localizations.dart';
 import 'core/theme/theme_provider.dart';
 import 'providers/settings_provider.dart';
+import 'providers/fast_provider.dart';
+import 'providers/wellness_provider.dart';
 import 'core/constants/pref_keys.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 import 'screens/home/home_screen.dart';
@@ -44,13 +46,43 @@ class FasloApp extends StatefulWidget {
   State<FasloApp> createState() => _FasloAppState();
 }
 
-class _FasloAppState extends State<FasloApp> {
+class _FasloAppState extends State<FasloApp> with WidgetsBindingObserver {
   bool? _onboardingDone;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _checkOnboarding();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Flush pending debounced saves when app is paused or detached
+    // to ensure no data loss
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      _flushPendingSaves();
+    }
+  }
+
+  Future<void> _flushPendingSaves() async {
+    try {
+      final fastProvider = context.read<FastProvider>();
+      final wellnessProvider = context.read<WellnessProvider>();
+      await Future.wait([
+        fastProvider.flushPendingSaves(),
+        wellnessProvider.flushWaterSave(),
+      ]);
+    } catch (_) {
+      // Continue even if flush fails
+    }
   }
 
   Future<void> _checkOnboarding() async {
@@ -72,6 +104,7 @@ class _FasloAppState extends State<FasloApp> {
     final settingsProvider = context.watch<SettingsProvider>();
 
     return MaterialApp(
+      key: ValueKey(settingsProvider.locale),
       title: 'Faslo',
       debugShowCheckedModeBanner: false,
       theme: themeProvider.themeData,

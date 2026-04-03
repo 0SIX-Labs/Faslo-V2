@@ -17,6 +17,8 @@ dependencies:
 
   # Storage
   shared_preferences: ^2.2.3
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
 
   # Charts
   fl_chart: ^0.68.0
@@ -41,6 +43,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.8
 
 flutter:
   generate: true

@@ -125,7 +125,7 @@ abstract class AppLocalizations {
   /// No description provided for @clarity.
   ///
   /// In en, this message translates to:
-  /// **'Clarity.'**
+  /// **'Faslo.'**
   String get clarity;
 
   /// No description provided for @welcomeSubtitle.
@@ -617,79 +617,79 @@ abstract class AppLocalizations {
   /// No description provided for @phaseFedStateDesc.
   ///
   /// In en, this message translates to:
-  /// **'Your body is processing your last meal.'**
+  /// **'Nourishing your body. The journey awaits.'**
   String get phaseFedStateDesc;
 
   /// No description provided for @phaseCatabolic.
   ///
   /// In en, this message translates to:
-  /// **'Catabolic'**
+  /// **'Awakening'**
   String get phaseCatabolic;
 
   /// No description provided for @phaseCatabolicDesc.
   ///
   /// In en, this message translates to:
-  /// **'Insulin levels drop. Fat stores begin to activate.'**
+  /// **'Your body begins to let go. Fat stores stir.'**
   String get phaseCatabolicDesc;
 
   /// No description provided for @phaseFatBurning.
   ///
   /// In en, this message translates to:
-  /// **'Fat Burning'**
+  /// **'Burning'**
   String get phaseFatBurning;
 
   /// No description provided for @phaseFatBurningDesc.
   ///
   /// In en, this message translates to:
-  /// **'Your body switches to burning fat for fuel.'**
+  /// **'Fueling from within. You\'re becoming lighter.'**
   String get phaseFatBurningDesc;
 
   /// No description provided for @phaseKetosis.
   ///
   /// In en, this message translates to:
-  /// **'Ketosis'**
+  /// **'Clarity'**
   String get phaseKetosis;
 
   /// No description provided for @phaseKetosisDesc.
   ///
   /// In en, this message translates to:
-  /// **'Fat burning peaks. Mental clarity often follows.'**
+  /// **'Mind sharpens. Energy flows freely.'**
   String get phaseKetosisDesc;
 
   /// No description provided for @phaseDeepKetosis.
   ///
   /// In en, this message translates to:
-  /// **'Deep Ketosis'**
+  /// **'Deep Flow'**
   String get phaseDeepKetosis;
 
   /// No description provided for @phaseDeepKetosisDesc.
   ///
   /// In en, this message translates to:
-  /// **'Ketone production is high. Energy is stable.'**
+  /// **'Profound stillness. Your body knows the way.'**
   String get phaseDeepKetosisDesc;
 
   /// No description provided for @phaseAutophagy.
   ///
   /// In en, this message translates to:
-  /// **'Autophagy'**
+  /// **'Renewal'**
   String get phaseAutophagy;
 
   /// No description provided for @phaseAutophagyDesc.
   ///
   /// In en, this message translates to:
-  /// **'Cellular cleanup begins. Your cells are renewing.'**
+  /// **'Old cells make way for new. You\'re transforming.'**
   String get phaseAutophagyDesc;
 
   /// No description provided for @phaseImmuneReset.
   ///
   /// In en, this message translates to:
-  /// **'Immune Reset'**
+  /// **'Reset'**
   String get phaseImmuneReset;
 
   /// No description provided for @phaseImmuneResetDesc.
   ///
   /// In en, this message translates to:
-  /// **'Extended fast triggering deep immune regeneration.'**
+  /// **'Deep restoration. Your body rebuilds itself.'**
   String get phaseImmuneResetDesc;
 
   /// No description provided for @planCircadian.
@@ -907,6 +907,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'About Faslo'**
   String get aboutTitle;
+
+  /// No description provided for @shareTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Your Achievement'**
+  String get shareTitle;
+
+  /// No description provided for @shareButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get shareButton;
+
+  /// No description provided for @shareDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get shareDone;
+
+  /// No description provided for @shareStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} day streak 🔥'**
+  String shareStreak(int n);
+
+  /// No description provided for @shareMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay consistent.\nYour body thanks you.'**
+  String get shareMessage;
+
+  /// No description provided for @shareBranding.
+  ///
+  /// In en, this message translates to:
+  /// **'FASLO'**
+  String get shareBranding;
+
+  /// No description provided for @shareCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'FAST COMPLETED'**
+  String get shareCompleted;
 }
 
 class _AppLocalizationsDelegate

@@ -4,7 +4,7 @@ import '../constants/app_colors.dart';
 
 // ignore_for_file: prefer_const_constructors
 
-enum AppThemeMode { sageMint, kineticObsidian, zenPaper, minimalOled }
+enum AppThemeMode { sageMint, kineticObsidian, minimalMono, minimalOled }
 
 class AppTheme {
   // ── Sage Mint ──────────────────────────────────────────────────────────────
@@ -204,125 +204,152 @@ class AppTheme {
         ),
       );
 
-  // ── Zen Paper ──────────────────────────────────────────────────────────────
-  static ThemeData zenPaper() {
+  // ── Minimal Mono (Monochrome Line Style) ────────────────────────────────────
+  static ThemeData minimalMono() {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: ColorScheme.light(
-        primary: ZenPaperColors.accent,
-        onPrimary: ZenPaperColors.onAccent,
-        surface: ZenPaperColors.surface,
-        onSurface: ZenPaperColors.ink,
-        onSurfaceVariant: ZenPaperColors.inkSecondary,
-        outlineVariant: ZenPaperColors.outline,
-        error: ZenPaperColors.error,
-        surfaceContainerLowest: ZenPaperColors.background,
-        surfaceContainerLow: ZenPaperColors.surface,
-        surfaceContainer: ZenPaperColors.surfaceCard,
-        surfaceContainerHigh: ZenPaperColors.surfaceSunken,
-        surfaceContainerHighest: ZenPaperColors.surfaceSunken,
+        primary: MinimalMonoColors.accent,
+        onPrimary: MinimalMonoColors.onAccent,
+        surface: MinimalMonoColors.surface,
+        onSurface: MinimalMonoColors.ink,
+        onSurfaceVariant: MinimalMonoColors.inkSecondary,
+        outlineVariant: MinimalMonoColors.outlineLight,
+        error: MinimalMonoColors.error,
+        surfaceContainerLowest: MinimalMonoColors.background,
+        surfaceContainerLow: MinimalMonoColors.surface,
+        surfaceContainer: MinimalMonoColors.surfaceCard,
+        surfaceContainerHigh: MinimalMonoColors.surfaceSunken,
+        surfaceContainerHighest: MinimalMonoColors.surfaceSunken,
       ),
-      textTheme: _zenTextTheme(),
-      scaffoldBackgroundColor: ZenPaperColors.background,
+      textTheme: _minimalMonoTextTheme(),
+      scaffoldBackgroundColor: MinimalMonoColors.background,
       appBarTheme: const AppBarTheme(
-        backgroundColor: ZenPaperColors.background,
+        backgroundColor: MinimalMonoColors.background,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
       ),
       inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: ZenPaperColors.surfaceSunken,
+        filled: false,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(20),
+          borderSide:
+              const BorderSide(color: MinimalMonoColors.outline, width: 1.5),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: const BorderSide(
+              color: MinimalMonoColors.outlineLight, width: 1.5),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: ZenPaperColors.outline, width: 2),
+          borderRadius: BorderRadius.circular(20),
+          borderSide:
+              const BorderSide(color: MinimalMonoColors.outline, width: 2),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          foregroundColor: MinimalMonoColors.ink,
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          side: const BorderSide(color: MinimalMonoColors.outline, width: 1.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: MinimalMonoColors.ink,
+          side: const BorderSide(color: MinimalMonoColors.outline, width: 1.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
         ),
       ),
     );
   }
 
-  static TextTheme _zenTextTheme() => TextTheme(
-        displayLarge: GoogleFonts.nunito(
+  static TextTheme _minimalMonoTextTheme() => TextTheme(
+        displayLarge: GoogleFonts.spaceMono(
           fontSize: 56,
-          fontWeight: FontWeight.w800,
-          color: ZenPaperColors.ink,
+          fontWeight: FontWeight.w400,
+          color: MinimalMonoColors.ink,
         ),
-        displayMedium: GoogleFonts.nunito(
+        displayMedium: GoogleFonts.spaceMono(
           fontSize: 45,
-          fontWeight: FontWeight.w800,
-          color: ZenPaperColors.ink,
+          fontWeight: FontWeight.w400,
+          color: MinimalMonoColors.ink,
         ),
-        displaySmall: GoogleFonts.nunito(
+        displaySmall: GoogleFonts.spaceMono(
           fontSize: 36,
-          fontWeight: FontWeight.w700,
-          color: ZenPaperColors.ink,
+          fontWeight: FontWeight.w400,
+          color: MinimalMonoColors.ink,
         ),
-        headlineLarge: GoogleFonts.nunito(
+        headlineLarge: GoogleFonts.spaceMono(
           fontSize: 32,
-          fontWeight: FontWeight.w700,
-          color: ZenPaperColors.ink,
+          fontWeight: FontWeight.w400,
+          color: MinimalMonoColors.ink,
         ),
-        headlineMedium: GoogleFonts.nunito(
+        headlineMedium: GoogleFonts.spaceMono(
           fontSize: 24,
-          fontWeight: FontWeight.w700,
-          color: ZenPaperColors.ink,
+          fontWeight: FontWeight.w400,
+          color: MinimalMonoColors.ink,
         ),
-        headlineSmall: GoogleFonts.nunito(
+        headlineSmall: GoogleFonts.spaceMono(
           fontSize: 20,
-          fontWeight: FontWeight.w700,
-          color: ZenPaperColors.ink,
+          fontWeight: FontWeight.w400,
+          color: MinimalMonoColors.ink,
         ),
-        titleLarge: GoogleFonts.nunito(
+        titleLarge: GoogleFonts.inter(
           fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: ZenPaperColors.ink,
+          fontWeight: FontWeight.w500,
+          color: MinimalMonoColors.ink,
         ),
-        titleMedium: GoogleFonts.nunito(
+        titleMedium: GoogleFonts.inter(
           fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: ZenPaperColors.inkSecondary,
+          fontWeight: FontWeight.w500,
+          color: MinimalMonoColors.inkSecondary,
         ),
-        titleSmall: GoogleFonts.nunito(
+        titleSmall: GoogleFonts.inter(
           fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: ZenPaperColors.inkSecondary,
+          fontWeight: FontWeight.w500,
+          color: MinimalMonoColors.inkSecondary,
         ),
-        bodyLarge: GoogleFonts.nunito(
+        bodyLarge: GoogleFonts.inter(
           fontSize: 16,
           fontWeight: FontWeight.w400,
-          height: 1.7,
-          color: ZenPaperColors.inkSecondary,
+          height: 1.6,
+          color: MinimalMonoColors.inkSecondary,
         ),
-        bodyMedium: GoogleFonts.nunito(
+        bodyMedium: GoogleFonts.inter(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          height: 1.7,
-          color: ZenPaperColors.inkSecondary,
+          height: 1.6,
+          color: MinimalMonoColors.inkSecondary,
         ),
-        bodySmall: GoogleFonts.nunito(
+        bodySmall: GoogleFonts.inter(
           fontSize: 12,
           fontWeight: FontWeight.w400,
-          color: ZenPaperColors.inkMuted,
+          color: MinimalMonoColors.inkMuted,
         ),
-        labelLarge: GoogleFonts.nunito(
+        labelLarge: GoogleFonts.inter(
           fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: ZenPaperColors.inkMuted,
+          fontWeight: FontWeight.w500,
+          color: MinimalMonoColors.inkMuted,
           letterSpacing: 0.5,
         ),
-        labelMedium: GoogleFonts.nunito(
+        labelMedium: GoogleFonts.inter(
           fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: ZenPaperColors.inkMuted,
+          fontWeight: FontWeight.w500,
+          color: MinimalMonoColors.inkMuted,
         ),
-        labelSmall: GoogleFonts.nunito(
+        labelSmall: GoogleFonts.inter(
           fontSize: 10,
-          fontWeight: FontWeight.w600,
-          color: ZenPaperColors.inkMuted,
+          fontWeight: FontWeight.w500,
+          color: MinimalMonoColors.inkMuted,
         ),
       );
 

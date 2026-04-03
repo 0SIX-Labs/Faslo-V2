@@ -18,7 +18,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get welcomeTo => 'स्वागत है';
 
   @override
-  String get clarity => 'स्पष्टता में।';
+  String get clarity => 'Faslo.';
 
   @override
   String get welcomeSubtitle =>
@@ -426,4 +426,27 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get aboutTitle => 'Faslo के बारे में';
+
+  @override
+  String get shareTitle => 'अपनी उपलब्धि साझा करें';
+
+  @override
+  String get shareButton => 'साझा करें';
+
+  @override
+  String get shareDone => 'हो गया';
+
+  @override
+  String shareStreak(int n) {
+    return '$n दिन की श्रृंखला 🔥';
+  }
+
+  @override
+  String get shareMessage => 'निरंतर बने रहें।\nआपका शरीर धन्यवाद कर रहा है।';
+
+  @override
+  String get shareBranding => 'FASLO';
+
+  @override
+  String get shareCompleted => 'उपवास पूर्ण';
 }

@@ -101,18 +101,16 @@ class _BottomNavState extends State<BottomNav>
             ),
           ],
         );
-      case AppThemeMode.zenPaper:
+      case AppThemeMode.minimalMono:
         return BoxDecoration(
-          color: colorScheme.surfaceContainer.withValues(alpha: 0.9),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 20,
-              spreadRadius: 0,
-              offset: const Offset(0, -4),
+          color: colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          border: Border(
+            top: BorderSide(
+              color: colorScheme.outlineVariant,
+              width: 1,
             ),
-          ],
+          ),
         );
       case AppThemeMode.minimalOled:
         return BoxDecoration(
@@ -149,7 +147,7 @@ class _BottomNavState extends State<BottomNav>
         activeColor = colorScheme.primary;
         inactiveColor = colorScheme.onSurfaceVariant.withValues(alpha: 0.6);
         break;
-      case AppThemeMode.zenPaper:
+      case AppThemeMode.minimalMono:
         activeColor = colorScheme.primary;
         inactiveColor = colorScheme.onSurfaceVariant.withValues(alpha: 0.6);
         break;
