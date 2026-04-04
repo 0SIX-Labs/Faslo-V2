@@ -27,6 +27,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   String _selectedExperience = 'Beginner';
   final Set<String> _selectedGoals = {};
   FastingPlan? _selectedPlan;
+  bool _languageInitialized = false;
 
   @override
   void initState() {
@@ -43,8 +44,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _nextPage() {
-    // Validate name on first page before proceeding
-    if (_currentPage == 0 && _nameController.text.trim().isEmpty) {
+    // Validate name on second page before proceeding
+    if (_currentPage == 1 && _nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Please enter your name to continue'),
@@ -55,7 +56,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       return;
     }
 
-    if (_currentPage < 2) {
+    if (_currentPage < 3) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -92,7 +93,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Padding(
               padding: const EdgeInsets.all(16),
               child: LinearProgressIndicator(
-                value: (_currentPage + 1) / 3,
+                value: (_currentPage + 1) / 4,
                 backgroundColor:
                     Theme.of(context).colorScheme.surfaceContainerHigh,
                 valueColor: AlwaysStoppedAnimation(
@@ -106,6 +107,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 controller: _pageController,
                 onPageChanged: (page) => setState(() => _currentPage = page),
                 children: [
+                  _buildLanguagePage(),
                   _buildWelcomePage(),
                   _buildGoalsPage(),
                   _buildPlanPage(),
@@ -118,18 +120,131 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _buildWelcomePage() {
+  Widget _buildLanguagePage() {
     final colorScheme = Theme.of(context).colorScheme;
     final settingsProvider = context.watch<SettingsProvider>();
-    final themeProvider = context.watch<ThemeProvider>();
 
     final languages = [
-      {'code': 'en', 'name': 'English'},
-      {'code': 'de', 'name': 'Deutsch'},
-      {'code': 'ja', 'name': '日本語'},
-      {'code': 'ko', 'name': '한국어'},
-      {'code': 'hi', 'name': 'हिन्दी'},
+      {'code': 'en', 'name': 'English', 'flag': '🇬🇧'},
+      {'code': 'de', 'name': 'Deutsch', 'flag': '🇩🇪'},
+      {'code': 'ja', 'name': '日本語', 'flag': '🇯🇵'},
+      {'code': 'ko', 'name': '한국어', 'flag': '🇰🇷'},
+      {'code': 'hi', 'name': 'हिन्दी', 'flag': '🇮🇳'},
     ];
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 400),
+      switchInCurve: Curves.easeOut,
+      switchOutCurve: Curves.easeIn,
+      child: SingleChildScrollView(
+        key: ValueKey(settingsProvider.locale.languageCode),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 60),
+            Icon(
+              Icons.language_outlined,
+              size: 64,
+              color: colorScheme.primary,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Choose Language',
+              style: GoogleFonts.lexend(
+                fontSize: 28,
+                fontWeight: FontWeight.w700,
+                color: colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Select your preferred language',
+              style: TextStyle(
+                fontSize: 16,
+                color: colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 40),
+            ...languages.map((lang) {
+              final isSelected =
+                  settingsProvider.locale.languageCode == lang['code'];
+              return GestureDetector(
+                onTap: () => settingsProvider.setLocale(lang['code']!),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeOut,
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? colorScheme.primary.withValues(alpha: 0.12)
+                        : colorScheme.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color:
+                          isSelected ? colorScheme.primary : Colors.transparent,
+                      width: 1.5,
+                    ),
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color:
+                                  colorScheme.primary.withValues(alpha: 0.15),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ]
+                        : [],
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        lang['flag']!,
+                        style: const TextStyle(fontSize: 24),
+                      ),
+                      const SizedBox(width: 16),
+                      Text(
+                        lang['name']!,
+                        style: GoogleFonts.lexend(
+                          fontSize: 16,
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.w500,
+                          color: isSelected
+                              ? colorScheme.primary
+                              : colorScheme.onSurface,
+                        ),
+                      ),
+                      const Spacer(),
+                      if (isSelected)
+                        Icon(
+                          Icons.check_circle,
+                          color: colorScheme.primary,
+                          size: 22,
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+            const SizedBox(height: 48),
+            GradientButton(
+              text: 'Continue',
+              onPressed: _nextPage,
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWelcomePage() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final themeProvider = context.watch<ThemeProvider>();
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
@@ -178,19 +293,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               hintText: 'Enter your name',
             ),
           ),
-          const SizedBox(height: 32),
-          Text(
-            'PREFERRED LANGUAGE',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: colorScheme.onSurfaceVariant,
-              letterSpacing: 1,
-            ),
-          ),
-          const SizedBox(height: 12),
-          _buildLanguageCarousel(languages, settingsProvider, colorScheme),
-          const SizedBox(height: 32),
           Text(
             'CHOOSE YOUR PATH',
             style: TextStyle(
@@ -305,12 +407,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_languagePageController.hasClients && selectedIndex >= 0) {
-        _languagePageController.animateToPage(
-          selectedIndex,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
+      if (_languagePageController.hasClients &&
+          selectedIndex >= 0 &&
+          !_languageInitialized) {
+        _languageInitialized = true;
+        _languagePageController.jumpToPage(selectedIndex);
       }
     });
 
