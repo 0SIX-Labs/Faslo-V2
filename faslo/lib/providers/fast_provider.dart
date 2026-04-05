@@ -173,6 +173,9 @@ class FastProvider extends ChangeNotifier {
   }
 
   Future<void> setActivePlan(FastingPlan plan) async {
+    // Prevent changing plan while fasting is active
+    if (isFasting) return;
+
     _activePlan = plan;
     notifyListeners();
 

@@ -148,7 +148,11 @@ class _HomeScreenState extends State<HomeScreen>
                 const Spacer(),
                 // 2. MAIN FASTING RING (centerpiece) - ~60% of vertical space
                 _buildMainFastingRing(fastProvider, colorScheme, phase),
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
+                // 2.5 Milestone Progress Bar
+                if (fastProvider.isFasting)
+                  _buildMilestoneProgressBar(fastProvider, colorScheme),
+                const SizedBox(height: 16),
                 // 3. PHASE CARD (below ring) - shows current phase
                 _buildPhaseCard(phase, fastProvider),
                 const SizedBox(height: 24),
@@ -461,6 +465,110 @@ class _HomeScreenState extends State<HomeScreen>
                   ],
                 ),
               ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildMilestoneProgressBar(
+      FastProvider fastProvider, ColorScheme colorScheme) {
+    final elapsedHours = fastProvider.elapsed.inHours;
+
+    double calculateProgress() {
+      if (elapsedHours >= 16) return 1.0;
+      if (elapsedHours >= 8) return 0.66 + ((elapsedHours - 8) / 8) * 0.34;
+      if (elapsedHours >= 4) return 0.33 + ((elapsedHours - 4) / 4) * 0.33;
+      return (elapsedHours / 4) * 0.33;
+    }
+
+    final progress = calculateProgress();
+    final icons = ["⚡", "🔥", "🧘", "✅"];
+
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: const Duration(milliseconds: 2000),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 40,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: SizedBox(
+                            height: 8,
+                            child: LinearProgressIndicator(
+                              value: progress,
+                              backgroundColor: colorScheme.surfaceContainerHigh,
+                              color: colorScheme.primary,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: List.generate(4, (index) {
+                          final isComplete = progress > index / 3;
+                          return AnimatedContainer(
+                            duration: const Duration(milliseconds: 400),
+                            width: 36,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              color: isComplete
+                                  ? colorScheme.primary
+                                  : colorScheme.surfaceContainerHigh,
+                              shape: BoxShape.circle,
+                              boxShadow: isComplete
+                                  ? [
+                                      BoxShadow(
+                                        color: colorScheme.primary
+                                            .withValues(alpha: 0.35),
+                                        blurRadius: 12,
+                                        spreadRadius: 3,
+                                      )
+                                    ]
+                                  : [],
+                            ),
+                            child: Center(
+                              child: Text(
+                                icons[index],
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  elapsedHours < 4
+                      ? 'Blood sugar stabilizing'
+                      : elapsedHours < 8
+                          ? 'Fat burning active'
+                          : elapsedHours < 16
+                              ? 'Ketosis deepening'
+                              : 'Autophagy active',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: colorScheme.onSurfaceVariant,
+                    letterSpacing: 0.4,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
         );

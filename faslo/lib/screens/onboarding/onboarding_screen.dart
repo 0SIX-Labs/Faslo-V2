@@ -28,6 +28,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final Set<String> _selectedGoals = {};
   FastingPlan? _selectedPlan;
   bool _languageInitialized = false;
+  bool _doctorConsultAccepted = false;
 
   @override
   void initState() {
@@ -347,7 +348,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: 40),
           GradientButton(
-            text: 'Continue Journey',
+            text: 'Start Journey',
             onPressed: _nextPage,
           ),
         ],
@@ -694,9 +695,48 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           const SizedBox(height: 16),
+          // Doctor Consultation Checkbox
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _doctorConsultAccepted = !_doctorConsultAccepted;
+              });
+            },
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Checkbox(
+                  value: _doctorConsultAccepted,
+                  onChanged: (value) {
+                    setState(() {
+                      _doctorConsultAccepted = value ?? false;
+                    });
+                  },
+                  activeColor: colorScheme.primary,
+                  visualDensity: VisualDensity.compact,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      'This app does not provide medical advice. I confirm I have consulted a doctor before fasting. We are not responsible for health outcomes.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colorScheme.onSurfaceVariant,
+                        height: 1.3,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
           GradientButton(
-            text: 'Continue Journey',
-            onPressed: _nextPage,
+            text: 'Start Journey',
+            onPressed: _doctorConsultAccepted ? _nextPage : () {},
           ),
           const SizedBox(height: 16),
         ],

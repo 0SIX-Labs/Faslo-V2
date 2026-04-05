@@ -99,12 +99,47 @@ class _PlansScreenState extends State<PlansScreen> {
                 color: colorScheme.onSurface,
               ),
             ),
-            const SizedBox(height: 24),
-            // Featured plans
-            ...fastingPlans.take(2).map((plan) {
-              final isActive = fastProvider.activePlan.ratio == plan.ratio;
-              return _buildFeaturedPlanCard(plan, isActive, colorScheme, l10n);
-            }),
+            const SizedBox(height: 16),
+
+            // Currently Fasting Indicator
+            if (fastProvider.isFasting)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colorScheme.primary, width: 1),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.timer_outlined,
+                      color: colorScheme.primary,
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Currently Fasting - Plans are locked',
+                      style: TextStyle(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+            const SizedBox(height: 8),
+
+            // Featured plans - show only active plan always
+            _buildFeaturedPlanCard(
+              fastProvider.activePlan,
+              true,
+              colorScheme,
+              l10n,
+              disabled: false,
+            ),
             const SizedBox(height: 24),
             // Popular protocols
             Row(
@@ -166,91 +201,101 @@ class _PlansScreenState extends State<PlansScreen> {
     FastingPlan plan,
     bool isActive,
     ColorScheme colorScheme,
-    AppLocalizations l10n,
-  ) {
+    AppLocalizations l10n, {
+    bool disabled = false,
+  }) {
     return GestureDetector(
-      onTap: () => context.read<FastProvider>().setActivePlan(plan),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: isActive
-              ? colorScheme.primary.withValues(alpha: 0.1)
-              : colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: isActive ? colorScheme.primary : Colors.transparent,
-            width: 2,
+      onTap: disabled || (context.read<FastProvider>().isFasting && !isActive)
+          ? null
+          : () => context.read<FastProvider>().setActivePlan(plan),
+      child: AnimatedOpacity(
+        duration: const Duration(milliseconds: 200),
+        opacity:
+            disabled || (context.read<FastProvider>().isFasting && !isActive)
+                ? 0.4
+                : 1.0,
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: isActive
+                ? colorScheme.primary.withValues(alpha: 0.1)
+                : colorScheme.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: isActive ? colorScheme.primary : Colors.transparent,
+              width: 2,
+            ),
           ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  plan.ratio,
-                  style: GoogleFonts.lexend(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w700,
-                    color: colorScheme.primary,
-                  ),
-                ),
-                if (isActive)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    plan.ratio,
+                    style: GoogleFonts.lexend(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w700,
                       color: colorScheme.primary,
-                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text(
-                      'ACTIVE',
-                      style: GoogleFonts.lexend(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: colorScheme.onPrimary,
-                        letterSpacing: 1,
+                  ),
+                  if (isActive)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: colorScheme.primary,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        'ACTIVE',
+                        style: GoogleFonts.lexend(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: colorScheme.onPrimary,
+                          letterSpacing: 1,
+                        ),
                       ),
                     ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _getLocalizedName(plan.nameKey, l10n),
+                style: GoogleFonts.lexend(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerHigh,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  _getLocalizedDifficulty(plan.difficultyKey, l10n),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: colorScheme.onSurfaceVariant,
                   ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _getLocalizedName(plan.nameKey, l10n),
-              style: GoogleFonts.lexend(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: colorScheme.onSurface,
+                ),
               ),
-            ),
-            const SizedBox(height: 4),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                _getLocalizedDifficulty(plan.difficultyKey, l10n),
+              const SizedBox(height: 8),
+              Text(
+                _getLocalizedBenefit(plan.benefitKey, l10n),
                 style: TextStyle(
-                  fontSize: 12,
                   color: colorScheme.onSurfaceVariant,
                 ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _getLocalizedBenefit(plan.benefitKey, l10n),
-              style: TextStyle(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
