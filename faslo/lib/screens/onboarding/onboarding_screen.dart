@@ -264,7 +264,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           const SizedBox(height: 40),
           Text(
-            'Welcome to',
+            AppLocalizations.of(context)!.welcomeTo,
             style: GoogleFonts.lexend(
               fontSize: 32,
               fontWeight: FontWeight.w700,
@@ -272,7 +272,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           Text(
-            AppLocalizations.of(context)!.clarity,
+            AppLocalizations.of(context)!.appName,
             style: GoogleFonts.lexend(
               fontSize: 32,
               fontWeight: FontWeight.w700,

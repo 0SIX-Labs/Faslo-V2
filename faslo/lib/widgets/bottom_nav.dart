@@ -46,7 +46,7 @@ class _BottomNavState extends State<BottomNav>
       _NavItem(icon: Icons.home_rounded, label: 'Home'),
       _NavItem(icon: Icons.calendar_today_rounded, label: 'Plans'),
       _NavItem(icon: Icons.history_rounded, label: 'History'),
-      _NavItem(icon: Icons.favorite_border_rounded, label: 'Wellness'),
+      _NavItem(icon: Icons.person_outline_rounded, label: 'Profile'),
     ];
 
     return Container(

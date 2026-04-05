@@ -16,6 +16,7 @@ import '../../providers/wellness_provider.dart';
 import '../plans/plans_screen.dart';
 import '../history/history_screen.dart';
 import '../wellness/wellness_screen.dart';
+import '../../l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -152,11 +153,8 @@ class _HomeScreenState extends State<HomeScreen>
                 // 2.5 Milestone Progress Bar
                 if (fastProvider.isFasting)
                   _buildMilestoneProgressBar(fastProvider, colorScheme),
-                const SizedBox(height: 16),
-                // 3. PHASE CARD (below ring) - shows current phase
-                _buildPhaseCard(phase, fastProvider),
                 const SizedBox(height: 24),
-                // 4. WATER LOGGING WIDGET
+                // 3. WATER LOGGING WIDGET
                 _buildWaterWidget(),
                 const Spacer(),
                 // 5. PRIMARY BUTTON - Start Fast / End Fast
@@ -191,12 +189,17 @@ class _HomeScreenState extends State<HomeScreen>
   ) {
     final hour = DateTime.now().hour;
     String greeting;
+    final userName = settingsProvider.userName;
     if (hour < 12) {
       greeting = 'Good morning';
     } else if (hour < 17) {
       greeting = 'Good afternoon';
     } else {
       greeting = 'Good evening';
+    }
+
+    if (userName.isNotEmpty) {
+      greeting = '$greeting, $userName';
     }
 
     // Add encouraging message when fasting
@@ -484,7 +487,12 @@ class _HomeScreenState extends State<HomeScreen>
     }
 
     final progress = calculateProgress();
-    final icons = ["⚡", "🔥", "🧘", "✅"];
+    final icons = [
+      Icons.bolt_outlined,
+      Icons.local_fire_department_outlined,
+      Icons.self_improvement_outlined,
+      Icons.check_circle_outlined
+    ];
 
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
@@ -541,31 +549,18 @@ class _HomeScreenState extends State<HomeScreen>
                                   : [],
                             ),
                             child: Center(
-                              child: Text(
+                              child: Icon(
                                 icons[index],
-                                style: const TextStyle(fontSize: 16),
+                                size: 18,
+                                color: isComplete
+                                    ? colorScheme.onPrimary
+                                    : colorScheme.onSurfaceVariant,
                               ),
                             ),
                           );
                         }),
                       ),
                     ],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  elapsedHours < 4
-                      ? 'Blood sugar stabilizing'
-                      : elapsedHours < 8
-                          ? 'Fat burning active'
-                          : elapsedHours < 16
-                              ? 'Ketosis deepening'
-                              : 'Autophagy active',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: colorScheme.onSurfaceVariant,
-                    letterSpacing: 0.4,
-                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
