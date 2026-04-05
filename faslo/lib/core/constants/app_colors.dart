@@ -45,8 +45,8 @@ class MinimalMonoColors {
   static const surfaceCard = Color(0xFFFFFFFF);
   static const surfaceSunken = Color(0xFFF8F8F8);
   static const ink = Color(0xFF000000);
-  static const inkSecondary = Color(0xFF333333);
-  static const inkMuted = Color(0xFF666666);
+  static const inkSecondary = Color(0xFF000000);
+  static const inkMuted = Color(0xFF000000);
   static const outline = Color(0xFF000000);
   static const outlineLight = Color(0xFFE0E0E0);
   static const accent = Color(0xFF000000);

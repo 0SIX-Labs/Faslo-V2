@@ -149,58 +149,60 @@ class AppTheme {
 
   static TextTheme _obsidianTextTheme() => TextTheme(
         displayLarge: GoogleFonts.lexend(
-          fontSize: 72,
-          fontWeight: FontWeight.w900,
-          letterSpacing: -2.0,
-        ),
-        displayMedium: GoogleFonts.lexend(
-          fontSize: 48,
-          fontWeight: FontWeight.w900,
+          fontSize: 57,
+          fontWeight: FontWeight.w700,
           letterSpacing: -1.5,
         ),
-        displaySmall:
-            GoogleFonts.lexend(fontSize: 36, fontWeight: FontWeight.w800),
+        displayMedium: GoogleFonts.lexend(
+          fontSize: 45,
+          fontWeight: FontWeight.w700,
+          letterSpacing: -1.0,
+        ),
+        displaySmall: GoogleFonts.lexend(
+          fontSize: 36,
+          fontWeight: FontWeight.w600,
+          letterSpacing: -0.5,
+        ),
         headlineLarge: GoogleFonts.lexend(
           fontSize: 32,
-          fontWeight: FontWeight.w800,
+          fontWeight: FontWeight.w600,
         ),
         headlineMedium: GoogleFonts.lexend(
-          fontSize: 24,
-          fontWeight: FontWeight.w700,
+          fontSize: 28,
+          fontWeight: FontWeight.w600,
         ),
         headlineSmall: GoogleFonts.lexend(
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
         ),
         titleLarge:
-            GoogleFonts.manrope(fontSize: 18, fontWeight: FontWeight.w700),
+            GoogleFonts.inter(fontSize: 22, fontWeight: FontWeight.w600),
         titleMedium:
-            GoogleFonts.manrope(fontSize: 14, fontWeight: FontWeight.w600),
-        titleSmall: GoogleFonts.manrope(
+            GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w500),
+        titleSmall:
+            GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500),
+        bodyLarge: GoogleFonts.inter(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          height: 1.6,
+        ),
+        bodyMedium: GoogleFonts.inter(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          height: 1.6,
+        ),
+        bodySmall: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w400),
+        labelLarge:
+            GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500),
+        labelMedium: GoogleFonts.inter(
           fontSize: 12,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 1.5,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.5,
         ),
-        bodyLarge:
-            GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.w400),
-        bodyMedium:
-            GoogleFonts.manrope(fontSize: 14, fontWeight: FontWeight.w400),
-        bodySmall:
-            GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w400),
-        labelLarge: GoogleFonts.manrope(
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 2.0,
-        ),
-        labelMedium: GoogleFonts.manrope(
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 2.0,
-        ),
-        labelSmall: GoogleFonts.manrope(
-          fontSize: 9,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 2.0,
+        labelSmall: GoogleFonts.inter(
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.5,
         ),
       );
 

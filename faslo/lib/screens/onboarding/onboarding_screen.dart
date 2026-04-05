@@ -151,7 +151,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Choose Language',
+              AppLocalizations.of(context)!.language,
               style: GoogleFonts.lexend(
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
@@ -160,7 +160,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Select your preferred language',
+              AppLocalizations.of(context)!.preferredLanguage,
               style: TextStyle(
                 fontSize: 16,
                 color: colorScheme.onSurfaceVariant,
@@ -232,7 +232,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             }).toList(),
             const SizedBox(height: 48),
             GradientButton(
-              text: 'Continue',
+              text: AppLocalizations.of(context)!.continueJourney,
               onPressed: _nextPage,
             ),
             const SizedBox(height: 24),
@@ -293,8 +293,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               hintText: 'Enter your name',
             ),
           ),
+          const SizedBox(height: 32),
           Text(
-            'CHOOSE YOUR PATH',
+            'CHOOSE YOUR STYLE',
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
