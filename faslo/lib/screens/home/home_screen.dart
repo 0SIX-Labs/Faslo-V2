@@ -12,6 +12,7 @@ import '../../widgets/bottom_nav.dart';
 import '../../widgets/phase_card.dart';
 import '../../widgets/share_card.dart';
 import '../../services/share_service.dart';
+import '../../providers/wellness_provider.dart';
 import '../plans/plans_screen.dart';
 import '../history/history_screen.dart';
 import '../wellness/wellness_screen.dart';
@@ -150,8 +151,11 @@ class _HomeScreenState extends State<HomeScreen>
                 const SizedBox(height: 32),
                 // 3. PHASE CARD (below ring) - shows current phase
                 _buildPhaseCard(phase, fastProvider),
+                const SizedBox(height: 24),
+                // 4. WATER LOGGING WIDGET
+                _buildWaterWidget(),
                 const Spacer(),
-                // 4. PRIMARY BUTTON - Start Fast / End Fast
+                // 5. PRIMARY BUTTON - Start Fast / End Fast
                 _buildPrimaryButton(fastProvider, colorScheme),
                 const SizedBox(height: 32),
               ],
@@ -327,6 +331,139 @@ class _HomeScreenState extends State<HomeScreen>
           HapticFeedback.heavyImpact();
           _showCompletionSnackBar(session);
         }
+      },
+    );
+  }
+
+  Widget _buildWaterWidget() {
+    final wellnessProvider = context.watch<WellnessProvider>();
+    final settingsProvider = context.watch<SettingsProvider>();
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final currentWater = wellnessProvider.getTodayWater();
+    final progress =
+        (currentWater / settingsProvider.waterGoal).clamp(0.0, 1.0);
+
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: const Duration(milliseconds: 2100),
+      curve: Curves.easeOut,
+      builder: (context, value, child) {
+        return Transform.translate(
+          offset: Offset(0, 25 * (1 - value)),
+          child: Opacity(
+            opacity: value,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 48),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Minus Button LEFT
+                    GestureDetector(
+                      onTap: currentWater > 0
+                          ? () {
+                              wellnessProvider.decrementWater().ignore();
+                              HapticFeedback.lightImpact();
+                            }
+                          : null,
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 150),
+                        opacity: currentWater > 0 ? 1.0 : 0.3,
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: colorScheme.surfaceContainerHigh,
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: Icon(
+                            Icons.remove_rounded,
+                            color: colorScheme.onSurfaceVariant,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // CENTER: Water icon + text
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 36,
+                          height: 36,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                value: progress,
+                                strokeWidth: 2.5,
+                                backgroundColor:
+                                    colorScheme.surfaceContainerHigh,
+                                color:
+                                    colorScheme.primary.withValues(alpha: 0.7),
+                              ),
+                              const Text(
+                                '💧',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          '$currentWater / ${settingsProvider.waterGoal}',
+                          style: GoogleFonts.lexend(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Plus Button RIGHT
+                    GestureDetector(
+                      onTap: currentWater < 8
+                          ? () {
+                              wellnessProvider.incrementWater().ignore();
+                              HapticFeedback.lightImpact();
+                            }
+                          : null,
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 150),
+                        opacity: currentWater < 8 ? 1.0 : 0.3,
+                        child: AnimatedScale(
+                          duration: const Duration(milliseconds: 150),
+                          scale: currentWater == 0 ? 1.08 : 1.0,
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color:
+                                  colorScheme.primary.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: Icon(
+                              Icons.add_rounded,
+                              color:
+                                  colorScheme.primary.withValues(alpha: 0.85),
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
       },
     );
   }

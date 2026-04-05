@@ -30,6 +30,12 @@ class WellnessProvider extends ChangeNotifier {
   // Get today's water count (O(1) operation)
   int getTodayWater() {
     final today = _todayStr();
+    // First check in-memory list for instant UI updates
+    final idx = _water.indexWhere((e) => e.date == today);
+    if (idx >= 0) {
+      return _water[idx].glasses;
+    }
+    // Fallback to Hive only if not in memory
     final box = Hive.box<int>('water_entries');
     return box.get(today) ?? 0;
   }
@@ -38,15 +44,43 @@ class WellnessProvider extends ChangeNotifier {
   Future<void> incrementWater() async {
     final today = _todayStr();
     final box = Hive.box<int>('water_entries');
-    final current = box.get(today) ?? 0;
+
+    // Always use in-memory value first for immediate updates
+    final idx = _water.indexWhere((e) => e.date == today);
+    final current = idx >= 0 ? _water[idx].glasses : box.get(today) ?? 0;
+    // Limit maximum to 8 glasses
+    if (current >= 8) return;
     final newValue = current + 1;
 
     // Update in-memory list immediately for responsive UI
-    final idx = _water.indexWhere((e) => e.date == today);
     if (idx >= 0) {
       _water[idx] = WaterEntry(date: today, glasses: newValue);
     } else {
       _water.add(WaterEntry(date: today, glasses: newValue));
+    }
+    notifyListeners();
+
+    // Debounce the disk write
+    await _waterDebouncer.run(() async {
+      await box.put(today, newValue);
+    });
+  }
+
+  // Decrement today's water count (O(1) operation) with debouncing
+  Future<void> decrementWater() async {
+    final today = _todayStr();
+    final box = Hive.box<int>('water_entries');
+
+    // Always use in-memory value first for immediate updates
+    final idx = _water.indexWhere((e) => e.date == today);
+    final current = idx >= 0 ? _water[idx].glasses : box.get(today) ?? 0;
+    if (current <= 0) return;
+
+    final newValue = current - 1;
+
+    // Update in-memory list immediately for responsive UI
+    if (idx >= 0) {
+      _water[idx] = WaterEntry(date: today, glasses: newValue);
     }
     notifyListeners();
 
