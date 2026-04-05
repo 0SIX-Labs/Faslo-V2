@@ -20,7 +20,7 @@ Future<void> main() async {
   Hive.registerAdapter(FastSessionAdapter());
   Hive.registerAdapter(WaterEntryAdapter());
   await Hive.openBox<FastSession>('fast_sessions');
-  await Hive.openBox<WaterEntry>('water_entries');
+  await Hive.openBox<int>('water_entries');
 
   await NotificationService.init();
 

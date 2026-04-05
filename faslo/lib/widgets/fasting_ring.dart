@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../core/constants/fasting_phases.dart';
 import '../core/theme/theme_provider.dart';
 import '../core/theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 
 String formatElapsed(Duration d) {
   final h = d.inHours.toString().padLeft(2, '0');
@@ -303,7 +304,27 @@ class _FastingRingState extends State<FastingRing>
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  phase.nameKey,
+                  () {
+                    final l10n = AppLocalizations.of(context)!;
+                    switch (phase.nameKey) {
+                      case 'phaseFedState':
+                        return l10n.phaseFedState;
+                      case 'phaseCatabolic':
+                        return l10n.phaseCatabolic;
+                      case 'phaseFatBurning':
+                        return l10n.phaseFatBurning;
+                      case 'phaseKetosis':
+                        return l10n.phaseKetosis;
+                      case 'phaseDeepKetosis':
+                        return l10n.phaseDeepKetosis;
+                      case 'phaseAutophagy':
+                        return l10n.phaseAutophagy;
+                      case 'phaseImmuneReset':
+                        return l10n.phaseImmuneReset;
+                      default:
+                        return phase.nameKey;
+                    }
+                  }(),
                   style: GoogleFonts.lexend(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,

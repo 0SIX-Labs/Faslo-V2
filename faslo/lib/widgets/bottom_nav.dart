@@ -52,8 +52,12 @@ class _BottomNavState extends State<BottomNav>
     return Container(
       decoration: _getDecoration(themeProvider.mode, colorScheme),
       child: SafeArea(
+        top: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          padding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 10).copyWith(
+            bottom: MediaQuery.viewPaddingOf(context).bottom > 0 ? 0 : 10,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(items.length, (index) {
@@ -170,8 +174,8 @@ class _BottomNavState extends State<BottomNav>
         builder: (context, value, child) {
           return SizedBox(
             width: 64,
-            height: 52,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Icon with animated container

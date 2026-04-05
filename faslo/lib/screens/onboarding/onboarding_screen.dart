@@ -56,16 +56,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       return;
     }
 
-    if (_currentPage < 3) {
+    if (_currentPage < 2) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
+    } else {
+      _completeOnboarding();
     }
   }
 
   Future<void> _completeOnboarding() async {
-    if (_selectedPlan == null) return;
+    if (_selectedPlan == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Please select a fasting plan to continue'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
 
     final settingsProvider = context.read<SettingsProvider>();
     final fastProvider = context.read<FastProvider>();
@@ -93,7 +104,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Padding(
               padding: const EdgeInsets.all(16),
               child: LinearProgressIndicator(
-                value: (_currentPage + 1) / 4,
+                value: (_currentPage + 1) / 3,
                 backgroundColor:
                     Theme.of(context).colorScheme.surfaceContainerHigh,
                 valueColor: AlwaysStoppedAnimation(
@@ -110,7 +121,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   _buildLanguagePage(),
                   _buildWelcomePage(),
                   _buildGoalsPage(),
-                  _buildPlanPage(),
                 ],
               ),
             ),
@@ -229,7 +239,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
               );
-            }).toList(),
+            }),
             const SizedBox(height: 48),
             GradientButton(
               text: AppLocalizations.of(context)!.continueJourney,
@@ -287,10 +297,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          TextField(
-            controller: _nameController,
-            decoration: const InputDecoration(
-              hintText: 'Enter your name',
+          SizedBox(
+            height: 56,
+            child: TextField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                hintText: 'Enter your name',
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+              ),
             ),
           ),
           const SizedBox(height: 32),
@@ -485,15 +505,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       },
       {'key': 'longevity', 'label': 'Longevity', 'icon': Icons.timelapse},
     ];
-    final experiences = ['Beginner', 'Intermediate', 'Advanced'];
 
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Spacer(flex: 2),
+          const SizedBox(height: 20),
           Text(
             'What are your goals?',
             style: GoogleFonts.lexend(
@@ -565,7 +583,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Your experience?',
+            'Select Fasting Plan',
             style: GoogleFonts.lexend(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -573,25 +591,109 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: experiences.map((exp) {
-              final isSelected = _selectedExperience == exp;
-              return ChoiceChip(
-                label: Text(exp, style: const TextStyle(fontSize: 13)),
-                selected: isSelected,
-                onSelected: (_) => setState(() => _selectedExperience = exp),
-                selectedColor: colorScheme.primary,
-                labelStyle: TextStyle(
-                  color: isSelected ? Colors.white : colorScheme.onSurface,
-                ),
-                visualDensity: VisualDensity.compact,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-              );
-            }).toList(),
+          Expanded(
+            child: ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: fastingPlans.length - 1,
+              itemBuilder: (context, index) {
+                final plan = fastingPlans[index];
+                final isSelected = _selectedPlan?.ratio == plan.ratio;
+                return GestureDetector(
+                  onTap: () => setState(() => _selectedPlan = plan),
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? colorScheme.primary.withValues(alpha: 0.1)
+                          : colorScheme.surfaceContainerHigh,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isSelected
+                            ? colorScheme.primary
+                            : Colors.transparent,
+                        width: 2,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          plan.ratio,
+                          style: GoogleFonts.lexend(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color: colorScheme.primary,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                () {
+                                  final loc = AppLocalizations.of(context)!;
+                                  switch (plan.nameKey) {
+                                    case 'planCircadian':
+                                      return loc.planCircadian;
+                                    case 'planGentle':
+                                      return loc.planGentle;
+                                    case 'planLeangains':
+                                      return loc.planLeangains;
+                                    case 'planFatBurner':
+                                      return loc.planFatBurner;
+                                    case 'planWarrior':
+                                      return loc.planWarrior;
+                                    case 'planOMAD':
+                                      return loc.planOMAD;
+                                    default:
+                                      return plan.nameKey;
+                                  }
+                                }(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: colorScheme.onSurface,
+                                ),
+                              ),
+                              Text(
+                                () {
+                                  final loc = AppLocalizations.of(context)!;
+                                  switch (plan.difficultyKey) {
+                                    case 'diffBeginner':
+                                      return loc.diffBeginner;
+                                    case 'diffBalanced':
+                                      return loc.diffBalanced;
+                                    case 'diffModerate':
+                                      return loc.diffModerate;
+                                    case 'diffIntense':
+                                      return loc.diffIntense;
+                                    case 'diffAdvanced':
+                                      return loc.diffAdvanced;
+                                    default:
+                                      return plan.difficultyKey;
+                                  }
+                                }(),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (isSelected)
+                          Icon(
+                            Icons.check_circle,
+                            color: colorScheme.primary,
+                          ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
-          const Spacer(flex: 3),
+          const SizedBox(height: 16),
           GradientButton(
             text: 'Continue Journey',
             onPressed: _nextPage,

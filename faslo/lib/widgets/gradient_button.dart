@@ -112,7 +112,9 @@ class _GradientButtonState extends State<GradientButton>
                     child: AnimatedDefaultTextStyle(
                       duration: const Duration(milliseconds: 200),
                       style: TextStyle(
-                        color: colorScheme.onPrimary,
+                        color: themeProvider.mode == AppThemeMode.minimalMono
+                            ? colorScheme.onSurface
+                            : colorScheme.onPrimary,
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.5,
