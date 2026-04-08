@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../core/theme/theme_provider.dart';
 import '../core/theme/app_theme.dart';
+import '../l10n/app_localizations.dart';
 
 class BottomNav extends StatefulWidget {
   final int currentIndex;
@@ -42,11 +43,12 @@ class _BottomNavState extends State<BottomNav>
     final themeProvider = context.watch<ThemeProvider>();
     final colorScheme = Theme.of(context).colorScheme;
 
+    final loc = AppLocalizations.of(context)!;
     final items = [
-      _NavItem(icon: Icons.home_rounded, label: 'Home'),
-      _NavItem(icon: Icons.calendar_today_rounded, label: 'Plans'),
-      _NavItem(icon: Icons.history_rounded, label: 'History'),
-      _NavItem(icon: Icons.person_outline_rounded, label: 'Profile'),
+      _NavItem(icon: Icons.home_rounded, label: loc.home),
+      _NavItem(icon: Icons.calendar_today_rounded, label: loc.plans),
+      _NavItem(icon: Icons.history_rounded, label: loc.history),
+      _NavItem(icon: Icons.person_outline_rounded, label: loc.settings),
     ];
 
     return Container(
@@ -206,7 +208,12 @@ class _BottomNavState extends State<BottomNav>
                     fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
                     letterSpacing: isActive ? 0.5 : 0,
                   ),
-                  child: Text(item.label),
+                  child: Text(
+                    item.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),

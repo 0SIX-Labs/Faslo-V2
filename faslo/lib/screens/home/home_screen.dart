@@ -61,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen>
     final fastProvider = context.watch<FastProvider>();
     final phase = currentPhase(fastProvider.elapsed);
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: Container(
@@ -199,7 +200,8 @@ class _HomeScreenState extends State<HomeScreen>
     }
 
     if (userName.isNotEmpty) {
-      greeting = '$greeting, $userName';
+      final capitalizedName = userName[0].toUpperCase() + userName.substring(1);
+      greeting = '$greeting\n$capitalizedName';
     }
 
     // Add encouraging message when fasting
@@ -225,6 +227,7 @@ class _HomeScreenState extends State<HomeScreen>
             opacity: value * 0.7,
             child: Text(
               greeting,
+              textAlign: TextAlign.center,
               style: GoogleFonts.lexend(
                 fontSize: 16,
                 fontWeight: FontWeight.w300,
@@ -316,8 +319,9 @@ class _HomeScreenState extends State<HomeScreen>
     FastProvider fastProvider,
     ColorScheme colorScheme,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return GradientButton(
-      text: 'Start Fast',
+      text: l10n.startFasting,
       onPressed: () {
         fastProvider.startFast();
         HapticFeedback.mediumImpact();
@@ -329,8 +333,9 @@ class _HomeScreenState extends State<HomeScreen>
     FastProvider fastProvider,
     ColorScheme colorScheme,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return GradientButton(
-      text: 'End Fast',
+      text: l10n.stopFasting,
       onPressed: () async {
         final session = await fastProvider.stopFast();
         if (session != null && mounted) {

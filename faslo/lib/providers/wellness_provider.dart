@@ -27,6 +27,28 @@ class WellnessProvider extends ChangeNotifier {
 
   int get todayGlasses => getTodayWater();
 
+  /// Calculate consecutive water streak days
+  int get waterStreak {
+    int streak = 0;
+    final now = DateTime.now();
+
+    for (int i = 0; true; i++) {
+      final checkDate = now.subtract(Duration(days: i));
+      final dayStr =
+          '${checkDate.year}-${checkDate.month.toString().padLeft(2, '0')}-${checkDate.day.toString().padLeft(2, '0')}';
+
+      final idx = _water.indexWhere((e) => e.date == dayStr);
+      final glasses = idx >= 0 ? _water[idx].glasses : 0;
+
+      if (glasses >= 6) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+    return streak;
+  }
+
   // Get today's water count (O(1) operation)
   int getTodayWater() {
     final today = _todayStr();

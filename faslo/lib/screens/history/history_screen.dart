@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../providers/fast_provider.dart';
+import '../../providers/wellness_provider.dart';
 import '../../widgets/stat_card.dart';
+import '../../l10n/app_localizations.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
@@ -11,7 +13,9 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fastProvider = context.watch<FastProvider>();
+    final wellnessProvider = context.watch<WellnessProvider>();
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     final sessions = fastProvider.sessions;
 
     // Calculate stats
@@ -30,7 +34,7 @@ class HistoryScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 16),
             Text(
-              'History',
+              l10n.history,
               style: GoogleFonts.lexend(
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
@@ -43,14 +47,14 @@ class HistoryScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: StatCard(
-                    label: 'Total Fasts',
+                    label: l10n.totalFasts,
                     value: totalFasts.toString(),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: StatCard(
-                    label: 'LONGEST FAST',
+                    label: l10n.longestFast,
                     value: longestFast.toString(),
                     unit: 'h',
                   ),
@@ -69,7 +73,7 @@ class HistoryScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Consistency',
+                    l10n.consistency,
                     style: GoogleFonts.lexend(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -77,22 +81,44 @@ class HistoryScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primary.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      '${fastProvider.streak} day streak 🔥',
-                      style: GoogleFonts.lexend(
-                        fontWeight: FontWeight.w600,
-                        color: colorScheme.primary,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primary.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          '${fastProvider.streak} day streak 🔥',
+                          style: GoogleFonts.lexend(
+                            fontWeight: FontWeight.w600,
+                            color: colorScheme.primary,
+                          ),
+                        ),
                       ),
-                    ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          '${wellnessProvider.waterStreak} day streak 💧',
+                          style: GoogleFonts.lexend(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   SizedBox(
@@ -119,10 +145,10 @@ class HistoryScreen extends StatelessWidget {
                                   'M',
                                   'T',
                                   'W',
-                                  'T',
+                                  'Th',
                                   'F',
-                                  'S',
-                                  'S'
+                                  'Sa',
+                                  'Su'
                                 ];
                                 return Text(
                                   days[v.toInt() % 7],
@@ -163,7 +189,7 @@ class HistoryScreen extends StatelessWidget {
             const SizedBox(height: 24),
             // Recent fasts
             Text(
-              'Recent Fasts',
+              l10n.recentFasts,
               style: GoogleFonts.lexend(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -180,7 +206,7 @@ class HistoryScreen extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    'No fasts recorded yet.\nStart your first fast!',
+                    l10n.noFastsRecorded,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: colorScheme.onSurfaceVariant,
@@ -250,8 +276,8 @@ class HistoryScreen extends StatelessWidget {
     final now = DateTime.now();
     final spots = <FlSpot>[];
 
-    for (int i = 6; i >= 0; i--) {
-      final day = now.subtract(Duration(days: i));
+    for (int i = 0; i < 7; i++) {
+      final day = now.subtract(Duration(days: 6 - i));
       final dayStr =
           '${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}';
 
@@ -267,7 +293,7 @@ class HistoryScreen extends StatelessWidget {
               .map((s) => s.elapsed.inHours.toDouble())
               .reduce((a, b) => a + b);
 
-      spots.add(FlSpot((6 - i).toDouble(), hours));
+      spots.add(FlSpot(i.toDouble(), hours));
     }
 
     return spots;

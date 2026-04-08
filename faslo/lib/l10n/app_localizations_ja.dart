@@ -39,7 +39,26 @@ class AppLocalizationsJa extends AppLocalizations {
   String get continueJourney => '続ける';
 
   @override
+  String get startJourney => '旅を始める';
+
+  @override
+  String get chooseYourStyle => 'デザインを選択';
+
+  @override
   String get chooseGoals => '目標は何ですか？';
+
+  @override
+  String get selectFastingPlan => '断食プランを選択';
+
+  @override
+  String get medicalDisclaimer =>
+      'このアプリは医学的助言を提供しません。断食を開始する前に医師に相談したことを確認してください。健康上の結果について当社は責任を負いません。';
+
+  @override
+  String get pleaseEnterName => '続行するには名前を入力してください';
+
+  @override
+  String get pleaseSelectPlan => '続行するには断食プランを選択してください';
 
   @override
   String get goalWeightLoss => '減量';
@@ -90,6 +109,25 @@ class AppLocalizationsJa extends AppLocalizations {
   String get stopFasting => '断食を終了';
 
   @override
+  String get history => '履歴';
+
+  @override
+  String get totalFasts => '合計断食回数';
+
+  @override
+  String get longestFast => '最長断食';
+
+  @override
+  String get consistency => '一貫性';
+
+  @override
+  String get recentFasts => '最近の断食';
+
+  @override
+  String get noFastsRecorded =>
+      'No fasts recorded yet.\nStart your first fast!';
+
+  @override
   String get editFast => '断食を編集';
 
   @override
@@ -114,9 +152,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get timer => 'タイマー';
 
   @override
-  String get history => '履歴';
-
-  @override
   String get plans => 'プラン';
 
   @override
@@ -126,16 +161,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get wellness => 'ウェルネス';
 
   @override
-  String get totalFasts => '合計断食回数';
-
-  @override
   String get avgDuration => '平均時間';
-
-  @override
-  String get longestFast => '最長断食';
-
-  @override
-  String get consistency => '一貫性';
 
   @override
   String get last7days => '過去7日間のパフォーマンス';
@@ -144,9 +170,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String activeStreak(int n) {
     return '連続記録: $n日';
   }
-
-  @override
-  String get recentFasts => '最近の断食';
 
   @override
   String get goalMet => '目標達成';

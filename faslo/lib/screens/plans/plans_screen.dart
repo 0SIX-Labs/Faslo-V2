@@ -171,7 +171,7 @@ class _PlansScreenState extends State<PlansScreen> {
             const SizedBox(height: 24),
             // Customize button
             GradientButton(
-              text: 'Customize Your Plan',
+              text: l10n.customizePlan,
               onPressed: () => _showCustomizeSheet(context),
             ),
             const SizedBox(height: 24),
@@ -372,6 +372,7 @@ class _PlansScreenState extends State<PlansScreen> {
 
   void _showCustomizeSheet(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     showModalBottomSheet(
       context: context,
@@ -401,7 +402,7 @@ class _PlansScreenState extends State<PlansScreen> {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'Customize Your Plan',
+                    l10n.customizePlan,
                     style: GoogleFonts.lexend(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,

@@ -39,7 +39,26 @@ class AppLocalizationsKo extends AppLocalizations {
   String get continueJourney => '계속하기';
 
   @override
+  String get startJourney => '여정 시작';
+
+  @override
+  String get chooseYourStyle => '테마 선택';
+
+  @override
   String get chooseGoals => '목표는 무엇인가요?';
+
+  @override
+  String get selectFastingPlan => '단식 플랜 선택';
+
+  @override
+  String get medicalDisclaimer =>
+      '이 앱은 의학적 조언을 제공하지 않습니다. 단식을 시작하기 전에 의사와 상담했음을 확인합니다. 건강 결과에 대해 당사는 책임을 지지 않습니다.';
+
+  @override
+  String get pleaseEnterName => '계속하려면 이름을 입력하세요';
+
+  @override
+  String get pleaseSelectPlan => '계속하려면 단식 플랜을 선택하세요';
 
   @override
   String get goalWeightLoss => '체중 감량';
@@ -90,6 +109,25 @@ class AppLocalizationsKo extends AppLocalizations {
   String get stopFasting => '단식 종료';
 
   @override
+  String get history => '기록';
+
+  @override
+  String get totalFasts => '총 단식 횟수';
+
+  @override
+  String get longestFast => '최장 단식';
+
+  @override
+  String get consistency => '일관성';
+
+  @override
+  String get recentFasts => '최근 단식';
+
+  @override
+  String get noFastsRecorded =>
+      'No fasts recorded yet.\nStart your first fast!';
+
+  @override
   String get editFast => '단식 편집';
 
   @override
@@ -114,9 +152,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get timer => '타이머';
 
   @override
-  String get history => '기록';
-
-  @override
   String get plans => '플랜';
 
   @override
@@ -126,16 +161,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get wellness => '웰니스';
 
   @override
-  String get totalFasts => '총 단식 횟수';
-
-  @override
   String get avgDuration => '평균 시간';
-
-  @override
-  String get longestFast => '최장 단식';
-
-  @override
-  String get consistency => '일관성';
 
   @override
   String get last7days => '지난 7일 성과';
@@ -144,9 +170,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String activeStreak(int n) {
     return '연속 기록: $n일';
   }
-
-  @override
-  String get recentFasts => '최근 단식';
 
   @override
   String get goalMet => '목표 달성';

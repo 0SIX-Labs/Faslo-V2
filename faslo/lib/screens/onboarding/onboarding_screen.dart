@@ -24,10 +24,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   late PageController _languagePageController;
   int _currentPage = 0;
   final TextEditingController _nameController = TextEditingController();
-  String _selectedExperience = 'Beginner';
   final Set<String> _selectedGoals = {};
   FastingPlan? _selectedPlan;
-  bool _languageInitialized = false;
   bool _doctorConsultAccepted = false;
 
   @override
@@ -49,7 +47,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     if (_currentPage == 1 && _nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please enter your name to continue'),
+          content: Text(AppLocalizations.of(context)!.pleaseEnterName),
           backgroundColor: Theme.of(context).colorScheme.error,
           behavior: SnackBarBehavior.floating,
         ),
@@ -71,7 +69,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     if (_selectedPlan == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please select a fasting plan to continue'),
+          content: Text(AppLocalizations.of(context)!.pleaseSelectPlan),
           backgroundColor: Theme.of(context).colorScheme.error,
           behavior: SnackBarBehavior.floating,
         ),
@@ -281,7 +279,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Your journey towards mindful fasting begins here.',
+            AppLocalizations.of(context)!.welcomeSubtitle,
             style: TextStyle(
               fontSize: 16,
               color: colorScheme.onSurfaceVariant,
@@ -289,7 +287,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: 40),
           Text(
-            'HOW SHALL WE CALL YOU?',
+            AppLocalizations.of(context)!.howShallWeCallYou,
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -303,7 +301,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             child: TextField(
               controller: _nameController,
               decoration: InputDecoration(
-                hintText: 'Enter your name',
+                hintText: AppLocalizations.of(context)!.enterYourName,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 border: OutlineInputBorder(
@@ -316,7 +314,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: 32),
           Text(
-            'CHOOSE YOUR STYLE',
+            AppLocalizations.of(context)!.chooseYourStyle,
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -328,19 +326,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Row(
             children: [
               _buildThemeCard(
-                'Sage Mint',
+                AppLocalizations.of(context)!.themeSageMint,
                 AppThemeMode.sageMint,
                 themeProvider,
               ),
               const SizedBox(width: 12),
               _buildThemeCard(
-                'Kinetic Obsidian',
+                AppLocalizations.of(context)!.themeObsidian,
                 AppThemeMode.kineticObsidian,
                 themeProvider,
               ),
               const SizedBox(width: 12),
               _buildThemeCard(
-                'Minimal Mono',
+                AppLocalizations.of(context)!.themeMinimal,
                 AppThemeMode.minimalMono,
                 themeProvider,
               ),
@@ -348,7 +346,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: 40),
           GradientButton(
-            text: 'Start Journey',
+            text: AppLocalizations.of(context)!.startJourney,
             onPressed: _nextPage,
           ),
         ],
@@ -419,92 +417,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     }
   }
 
-  Widget _buildLanguageCarousel(
-    List<Map<String, String>> languages,
-    SettingsProvider settingsProvider,
-    ColorScheme colorScheme,
-  ) {
-    final selectedIndex = languages.indexWhere(
-      (lang) => lang['code'] == settingsProvider.locale.languageCode,
-    );
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_languagePageController.hasClients &&
-          selectedIndex >= 0 &&
-          !_languageInitialized) {
-        _languageInitialized = true;
-        _languagePageController.jumpToPage(selectedIndex);
-      }
-    });
-
-    return SizedBox(
-      height: 60,
-      child: PageView.builder(
-        controller: _languagePageController,
-        onPageChanged: (index) {
-          settingsProvider.setLocale(languages[index]['code']!);
-        },
-        itemCount: languages.length,
-        itemBuilder: (context, index) {
-          final lang = languages[index];
-          final isSelected =
-              settingsProvider.locale.languageCode == lang['code'];
-
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? colorScheme.primary
-                  : colorScheme.surfaceContainerHigh,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: isSelected
-                  ? [
-                      BoxShadow(
-                        color: colorScheme.primary.withValues(alpha: 0.3),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ]
-                  : [],
-            ),
-            child: Center(
-              child: AnimatedDefaultTextStyle(
-                duration: const Duration(milliseconds: 300),
-                style: TextStyle(
-                  fontSize: isSelected ? 18 : 14,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected ? Colors.white : colorScheme.onSurface,
-                ),
-                child: Text(lang['name']!),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
   Widget _buildGoalsPage() {
     final colorScheme = Theme.of(context).colorScheme;
+    final loc = AppLocalizations.of(context)!;
     final goals = [
       {
         'key': 'weight',
-        'label': 'Weight Loss',
+        'label': loc.goalWeightLoss,
         'icon': Icons.monitor_weight_outlined
       },
       {
         'key': 'metabolic',
-        'label': 'Metabolic Health',
+        'label': loc.goalMetabolic,
         'icon': Icons.favorite_border
       },
       {
         'key': 'clarity',
-        'label': 'Mental Clarity',
+        'label': loc.goalClarity,
         'icon': Icons.psychology_outlined
       },
-      {'key': 'longevity', 'label': 'Longevity', 'icon': Icons.timelapse},
+      {'key': 'longevity', 'label': loc.goalLongevity, 'icon': Icons.timelapse},
     ];
 
     return Padding(
@@ -514,7 +446,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           const SizedBox(height: 20),
           Text(
-            'What are your goals?',
+            AppLocalizations.of(context)!.chooseGoals,
             style: GoogleFonts.lexend(
               fontSize: 24,
               fontWeight: FontWeight.w700,
@@ -566,14 +498,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             : colorScheme.onSurfaceVariant,
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        goal['label'] as String,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: isSelected
-                              ? colorScheme.primary
-                              : colorScheme.onSurface,
+                      Expanded(
+                        child: Text(
+                          goal['label'] as String,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: isSelected
+                                ? colorScheme.primary
+                                : colorScheme.onSurface,
+                          ),
+                          softWrap: true,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -584,7 +521,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Select Fasting Plan',
+            AppLocalizations.of(context)!.selectFastingPlan,
             style: GoogleFonts.lexend(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -719,7 +656,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      'This app does not provide medical advice. I confirm I have consulted a doctor before fasting. We are not responsible for health outcomes.',
+                      AppLocalizations.of(context)!.medicalDisclaimer,
                       style: TextStyle(
                         fontSize: 12,
                         color: colorScheme.onSurfaceVariant,
@@ -735,113 +672,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 16),
 
           GradientButton(
-            text: 'Start Journey',
+            text: AppLocalizations.of(context)!.startJourney,
             onPressed: _doctorConsultAccepted ? _nextPage : () {},
           ),
           const SizedBox(height: 16),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPlanPage() {
-    final colorScheme = Theme.of(context).colorScheme;
-    List<FastingPlan> recommendedPlans;
-
-    switch (_selectedExperience) {
-      case 'Beginner':
-        recommendedPlans = fastingPlans.sublist(0, 3);
-        break;
-      case 'Intermediate':
-        recommendedPlans = fastingPlans.sublist(2, 5);
-        break;
-      case 'Advanced':
-        recommendedPlans = fastingPlans.sublist(3, 6);
-        break;
-      default:
-        recommendedPlans = fastingPlans.sublist(0, 3);
-    }
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 40),
-          Text(
-            'Recommended Plan',
-            style: GoogleFonts.lexend(
-              fontSize: 28,
-              fontWeight: FontWeight.w700,
-              color: colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: 24),
-          ...recommendedPlans.map((plan) {
-            final isSelected = _selectedPlan?.ratio == plan.ratio;
-            return GestureDetector(
-              onTap: () => setState(() => _selectedPlan = plan),
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? colorScheme.primary.withValues(alpha: 0.1)
-                      : colorScheme.surfaceContainerHigh,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color:
-                        isSelected ? colorScheme.primary : Colors.transparent,
-                    width: 2,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      plan.ratio,
-                      style: GoogleFonts.lexend(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            plan.nameKey,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: colorScheme.onSurface,
-                            ),
-                          ),
-                          Text(
-                            plan.difficultyKey,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (isSelected)
-                      Icon(
-                        Icons.check_circle,
-                        color: colorScheme.primary,
-                      ),
-                  ],
-                ),
-              ),
-            );
-          }),
-          const SizedBox(height: 40),
-          GradientButton(
-            text: 'Select this Plan',
-            onPressed: _selectedPlan != null ? _completeOnboarding : () {},
-          ),
         ],
       ),
     );

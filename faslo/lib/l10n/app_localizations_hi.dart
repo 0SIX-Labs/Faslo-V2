@@ -40,7 +40,26 @@ class AppLocalizationsHi extends AppLocalizations {
   String get continueJourney => 'जारी रखें';
 
   @override
+  String get startJourney => 'यात्रा प्रारंभ करें';
+
+  @override
+  String get chooseYourStyle => 'थीम चुनें';
+
+  @override
   String get chooseGoals => 'आपके लक्ष्य क्या हैं?';
+
+  @override
+  String get selectFastingPlan => 'उपवास योजना चुनें';
+
+  @override
+  String get medicalDisclaimer =>
+      'यह ऐप चिकित्सा सलाह प्रदान नहीं करता है। मैं पुष्टि करता हूं कि उपवास शुरू करने से पहले मैंने डॉक्टर से परामर्श किया है। स्वास्थ्य परिणामों के लिए हम जिम्मेदार नहीं हैं।';
+
+  @override
+  String get pleaseEnterName => 'जारी रखने के लिए कृपया अपना नाम दर्ज करें';
+
+  @override
+  String get pleaseSelectPlan => 'जारी रखने के लिए कृपया उपवास योजना चुनें';
 
   @override
   String get goalWeightLoss => 'वजन घटाना';
@@ -91,6 +110,25 @@ class AppLocalizationsHi extends AppLocalizations {
   String get stopFasting => 'उपवास समाप्त करें';
 
   @override
+  String get history => 'इतिहास';
+
+  @override
+  String get totalFasts => 'कुल उपवास';
+
+  @override
+  String get longestFast => 'सबसे लंबा उपवास';
+
+  @override
+  String get consistency => 'निरंतरता';
+
+  @override
+  String get recentFasts => 'हाल के उपवास';
+
+  @override
+  String get noFastsRecorded =>
+      'No fasts recorded yet.\nStart your first fast!';
+
+  @override
   String get editFast => 'उपवास संपादित करें';
 
   @override
@@ -115,9 +153,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String get timer => 'टाइमर';
 
   @override
-  String get history => 'इतिहास';
-
-  @override
   String get plans => 'योजनाएं';
 
   @override
@@ -127,16 +162,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get wellness => 'स्वास्थ्य';
 
   @override
-  String get totalFasts => 'कुल उपवास';
-
-  @override
   String get avgDuration => 'औसत अवधि';
-
-  @override
-  String get longestFast => 'सबसे लंबा उपवास';
-
-  @override
-  String get consistency => 'निरंतरता';
 
   @override
   String get last7days => 'पिछले 7 दिनों का प्रदर्शन';
@@ -145,9 +171,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String activeStreak(int n) {
     return 'सक्रिय श्रृंखला: $n दिन';
   }
-
-  @override
-  String get recentFasts => 'हाल के उपवास';
 
   @override
   String get goalMet => 'लक्ष्य प्राप्त';

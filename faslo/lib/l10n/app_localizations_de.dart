@@ -40,7 +40,27 @@ class AppLocalizationsDe extends AppLocalizations {
   String get continueJourney => 'Weiter';
 
   @override
+  String get startJourney => 'Reise beginnen';
+
+  @override
+  String get chooseYourStyle => 'WÄHLE DEIN DESIGN';
+
+  @override
   String get chooseGoals => 'Was sind deine Ziele?';
+
+  @override
+  String get selectFastingPlan => 'Fastenplan auswählen';
+
+  @override
+  String get medicalDisclaimer =>
+      'Diese App bietet keine medizinische Beratung. Ich bestätige, dass ich vor dem Fasten einen Arzt konsultiert habe. Wir sind nicht verantwortlich für Gesundheitsergebnisse.';
+
+  @override
+  String get pleaseEnterName => 'Bitte gib deinen Namen ein, um fortzufahren';
+
+  @override
+  String get pleaseSelectPlan =>
+      'Bitte wähle einen Fastenplan aus, um fortzufahren';
 
   @override
   String get goalWeightLoss => 'Gewichtsverlust';
@@ -91,6 +111,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get stopFasting => 'Fasten beenden';
 
   @override
+  String get history => 'Verlauf';
+
+  @override
+  String get totalFasts => 'Fastentage gesamt';
+
+  @override
+  String get longestFast => 'LÄNGSTES FASTEN';
+
+  @override
+  String get consistency => 'Konsequenz';
+
+  @override
+  String get recentFasts => 'Letzte Fastenzeiten';
+
+  @override
+  String get noFastsRecorded =>
+      'No fasts recorded yet.\nStart your first fast!';
+
+  @override
   String get editFast => 'Fasten bearbeiten';
 
   @override
@@ -115,9 +154,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get timer => 'Timer';
 
   @override
-  String get history => 'Verlauf';
-
-  @override
   String get plans => 'Pläne';
 
   @override
@@ -127,16 +163,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get wellness => 'Wohlbefinden';
 
   @override
-  String get totalFasts => 'Fastentage gesamt';
-
-  @override
   String get avgDuration => 'DURSCHN. DAUER';
-
-  @override
-  String get longestFast => 'LÄNGSTES FASTEN';
-
-  @override
-  String get consistency => 'Konsequenz';
 
   @override
   String get last7days => 'Leistung der letzten 7 Tage';
@@ -145,9 +172,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String activeStreak(int n) {
     return 'AKTIVE SERIE: $n';
   }
-
-  @override
-  String get recentFasts => 'Letzte Fastenzeiten';
 
   @override
   String get goalMet => 'ZIEL ERREICHT';

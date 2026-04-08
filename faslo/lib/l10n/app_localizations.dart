@@ -164,11 +164,47 @@ abstract class AppLocalizations {
   /// **'Continue Journey'**
   String get continueJourney;
 
+  /// No description provided for @startJourney.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Journey'**
+  String get startJourney;
+
+  /// No description provided for @chooseYourStyle.
+  ///
+  /// In en, this message translates to:
+  /// **'CHOOSE YOUR STYLE'**
+  String get chooseYourStyle;
+
   /// No description provided for @chooseGoals.
   ///
   /// In en, this message translates to:
   /// **'What are your goals?'**
   String get chooseGoals;
+
+  /// No description provided for @selectFastingPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Fasting Plan'**
+  String get selectFastingPlan;
+
+  /// No description provided for @medicalDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'This app does not provide medical advice. I confirm I have consulted a doctor before fasting. We are not responsible for health outcomes.'**
+  String get medicalDisclaimer;
+
+  /// No description provided for @pleaseEnterName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name to continue'**
+  String get pleaseEnterName;
+
+  /// No description provided for @pleaseSelectPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a fasting plan to continue'**
+  String get pleaseSelectPlan;
 
   /// No description provided for @goalWeightLoss.
   ///
@@ -266,6 +302,42 @@ abstract class AppLocalizations {
   /// **'Stop Fasting'**
   String get stopFasting;
 
+  /// No description provided for @history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get history;
+
+  /// No description provided for @totalFasts.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Fasts'**
+  String get totalFasts;
+
+  /// No description provided for @longestFast.
+  ///
+  /// In en, this message translates to:
+  /// **'LONGEST FAST'**
+  String get longestFast;
+
+  /// No description provided for @consistency.
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency'**
+  String get consistency;
+
+  /// No description provided for @recentFasts.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Fasts'**
+  String get recentFasts;
+
+  /// No description provided for @noFastsRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'No fasts recorded yet.\nStart your first fast!'**
+  String get noFastsRecorded;
+
   /// No description provided for @editFast.
   ///
   /// In en, this message translates to:
@@ -314,12 +386,6 @@ abstract class AppLocalizations {
   /// **'Timer'**
   String get timer;
 
-  /// No description provided for @history.
-  ///
-  /// In en, this message translates to:
-  /// **'History'**
-  String get history;
-
   /// No description provided for @plans.
   ///
   /// In en, this message translates to:
@@ -338,29 +404,11 @@ abstract class AppLocalizations {
   /// **'Wellness'**
   String get wellness;
 
-  /// No description provided for @totalFasts.
-  ///
-  /// In en, this message translates to:
-  /// **'Total Fasts'**
-  String get totalFasts;
-
   /// No description provided for @avgDuration.
   ///
   /// In en, this message translates to:
   /// **'AVG. DURATION'**
   String get avgDuration;
-
-  /// No description provided for @longestFast.
-  ///
-  /// In en, this message translates to:
-  /// **'LONGEST FAST'**
-  String get longestFast;
-
-  /// No description provided for @consistency.
-  ///
-  /// In en, this message translates to:
-  /// **'Consistency'**
-  String get consistency;
 
   /// No description provided for @last7days.
   ///
@@ -373,12 +421,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'ACTIVE STREAK: {n}'**
   String activeStreak(int n);
-
-  /// No description provided for @recentFasts.
-  ///
-  /// In en, this message translates to:
-  /// **'Recent Fasts'**
-  String get recentFasts;
 
   /// No description provided for @goalMet.
   ///

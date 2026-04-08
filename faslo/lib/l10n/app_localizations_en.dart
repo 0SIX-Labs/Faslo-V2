@@ -40,7 +40,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get continueJourney => 'Continue Journey';
 
   @override
+  String get startJourney => 'Start Journey';
+
+  @override
+  String get chooseYourStyle => 'CHOOSE YOUR STYLE';
+
+  @override
   String get chooseGoals => 'What are your goals?';
+
+  @override
+  String get selectFastingPlan => 'Select Fasting Plan';
+
+  @override
+  String get medicalDisclaimer =>
+      'This app does not provide medical advice. I confirm I have consulted a doctor before fasting. We are not responsible for health outcomes.';
+
+  @override
+  String get pleaseEnterName => 'Please enter your name to continue';
+
+  @override
+  String get pleaseSelectPlan => 'Please select a fasting plan to continue';
 
   @override
   String get goalWeightLoss => 'Weight Loss';
@@ -91,6 +110,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stopFasting => 'Stop Fasting';
 
   @override
+  String get history => 'History';
+
+  @override
+  String get totalFasts => 'Total Fasts';
+
+  @override
+  String get longestFast => 'LONGEST FAST';
+
+  @override
+  String get consistency => 'Consistency';
+
+  @override
+  String get recentFasts => 'Recent Fasts';
+
+  @override
+  String get noFastsRecorded =>
+      'No fasts recorded yet.\nStart your first fast!';
+
+  @override
   String get editFast => 'Edit Fast';
 
   @override
@@ -115,9 +153,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timer => 'Timer';
 
   @override
-  String get history => 'History';
-
-  @override
   String get plans => 'Plans';
 
   @override
@@ -127,16 +162,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wellness => 'Wellness';
 
   @override
-  String get totalFasts => 'Total Fasts';
-
-  @override
   String get avgDuration => 'AVG. DURATION';
-
-  @override
-  String get longestFast => 'LONGEST FAST';
-
-  @override
-  String get consistency => 'Consistency';
 
   @override
   String get last7days => 'Last 7 days performance';
@@ -145,9 +171,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String activeStreak(int n) {
     return 'ACTIVE STREAK: $n';
   }
-
-  @override
-  String get recentFasts => 'Recent Fasts';
 
   @override
   String get goalMet => 'GOAL MET';
