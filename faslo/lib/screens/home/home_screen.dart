@@ -141,31 +141,40 @@ class _HomeScreenState extends State<HomeScreen>
         children: [
           FadeTransition(
             opacity: _fadeAnimation,
-            child: Column(
-              children: [
-                const SizedBox(height: 24),
-                // 1. Greeting (small, subtle)
-                _buildGreeting(colorScheme, settingsProvider, fastProvider),
-                const Spacer(),
-                // 2. MAIN FASTING RING (centerpiece) - ~60% of vertical space
-                _buildMainFastingRing(fastProvider, colorScheme, phase),
-                const SizedBox(height: 24),
-                // 2.5 Milestone Progress Bar
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  child: fastProvider.isFasting
-                      ? _buildMilestoneProgressBar(fastProvider, colorScheme)
-                      : const SizedBox.shrink(),
+            child: SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).padding.top -
+                    80,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 24),
+                    // 1. Greeting (small, subtle)
+                    _buildGreeting(colorScheme, settingsProvider, fastProvider),
+                    const Spacer(),
+                    // 2. MAIN FASTING RING (centerpiece) - ~60% of vertical space
+                    _buildMainFastingRing(fastProvider, colorScheme, phase),
+                    const SizedBox(height: 24),
+                    // 2.5 Milestone Progress Bar
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      child: fastProvider.isFasting
+                          ? _buildMilestoneProgressBar(
+                              fastProvider, colorScheme)
+                          : const SizedBox.shrink(),
+                    ),
+                    const SizedBox(height: 24),
+                    // 3. WATER LOGGING WIDGET
+                    _buildWaterWidget(),
+                    const Spacer(),
+                    // 5. PRIMARY BUTTON - Start Fast / End Fast
+                    _buildPrimaryButton(fastProvider, colorScheme),
+                    const SizedBox(height: 32),
+                  ],
                 ),
-                const SizedBox(height: 24),
-                // 3. WATER LOGGING WIDGET
-                _buildWaterWidget(),
-                const Spacer(),
-                // 5. PRIMARY BUTTON - Start Fast / End Fast
-                _buildPrimaryButton(fastProvider, colorScheme),
-                const SizedBox(height: 32),
-              ],
+              ),
             ),
           ),
           // Confetti
