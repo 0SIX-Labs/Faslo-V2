@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import '../l10n/app_localizations.dart';
 
 class ShareCard extends StatelessWidget {
   final Duration elapsed;
   final int streak;
   final String planRatio;
+  final DateTime completedAt;
 
   const ShareCard({
     super.key,
     required this.elapsed,
     required this.streak,
     required this.planRatio,
+    required this.completedAt,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final loc = AppLocalizations.of(context)!;
     final hours = elapsed.inHours;
     final minutes = elapsed.inMinutes % 60;
     final durationStr = minutes > 0 ? '${hours}h ${minutes}m' : '${hours}h';
@@ -47,7 +52,7 @@ class ShareCard extends StatelessWidget {
           const SizedBox(height: 8),
           // Label
           Text(
-            'FAST COMPLETED',
+            loc.shareCompleted,
             style: GoogleFonts.lexend(
               fontSize: 12,
               fontWeight: FontWeight.w500,
@@ -74,7 +79,7 @@ class ShareCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '$streak day${streak > 1 ? 's' : ''} streak',
+                  loc.shareStreak(streak),
                   style: GoogleFonts.lexend(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
@@ -87,7 +92,7 @@ class ShareCard extends StatelessWidget {
           ],
           // Message
           Text(
-            'Stay consistent.\nYour body thanks you.',
+            loc.shareMessage,
             textAlign: TextAlign.center,
             style: GoogleFonts.lexend(
               fontSize: 14,
@@ -104,9 +109,21 @@ class ShareCard extends StatelessWidget {
             color: colorScheme.outlineVariant,
           ),
           const SizedBox(height: 16),
+          // Date
+          Text(
+            DateFormat('d MMM y • HH:mm').format(completedAt),
+            style: GoogleFonts.lexend(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
           // Branding
           Text(
-            'FASLO',
+            loc.shareBranding,
             style: GoogleFonts.lexend(
               fontSize: 11,
               fontWeight: FontWeight.w500,

@@ -475,4 +475,22 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get shareCompleted => 'FASTEN ABGESCHLOSSEN';
+
+  @override
+  String get greetingMorning => 'Good morning';
+
+  @override
+  String get greetingAfternoon => 'Good afternoon';
+
+  @override
+  String get greetingEvening => 'Good evening';
+
+  @override
+  String get encourageKeepGoing => 'Keep going';
+
+  @override
+  String get encourageDoingGreat => 'You\'re doing great';
+
+  @override
+  String get encourageStayStrong => 'Stay strong';
 }

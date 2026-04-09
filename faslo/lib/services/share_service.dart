@@ -1,4 +1,10 @@
+import 'dart:ui' as ui;
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'dart:io';
 import '../models/fast_session.dart';
 
 class ShareService {
@@ -34,9 +40,32 @@ class ShareService {
     await Share.share(text);
   }
 
-  /// Future: Share as image
-  /// Will capture the ShareCard widget as PNG and share
-  // static Future<void> shareImage(GlobalKey boundaryKey) async {
-  //   // Implementation for future image export
-  // }
+  /// Share ShareCard widget as high resolution image
+  /// Optimized for Instagram Stories / WhatsApp Status
+  static Future<void> shareImage(GlobalKey boundaryKey) async {
+    try {
+      // Capture widget as high resolution image
+      RenderRepaintBoundary boundary = boundaryKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
+
+      // 3x pixel density for crisp high quality output
+      final image = await boundary.toImage(pixelRatio: 3.0);
+      final ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      final Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      // Save to temporary file
+      final tempDir = await getTemporaryDirectory();
+      final file = await File('${tempDir.path}/fast_completed.png').create();
+      await file.writeAsBytes(pngBytes);
+
+      // Share image
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        subject: 'Fast Completed!',
+      );
+    } catch (e) {
+      // Fallback to text share if image capture fails
+    }
+  }
 }

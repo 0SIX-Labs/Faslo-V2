@@ -157,5 +157,13 @@
   "@shareStreak": {"placeholders": {"n": {"type": "int"}}},
   "shareMessage": "Stay consistent.\nYour body thanks you.",
   "shareBranding": "FASLO",
-  "shareCompleted": "FAST COMPLETED"
+  "shareCompleted": "FAST COMPLETED",
+  
+  "greetingMorning": "Good morning",
+  "greetingAfternoon": "Good afternoon",
+  "greetingEvening": "Good evening",
+  
+  "encourageKeepGoing": "Keep going",
+  "encourageDoingGreat": "You're doing great",
+  "encourageStayStrong": "Stay strong"
 }

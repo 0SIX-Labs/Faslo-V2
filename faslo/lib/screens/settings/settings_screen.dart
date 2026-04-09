@@ -84,25 +84,64 @@ class SettingsScreen extends StatelessWidget {
             _buildSection(
               'Language',
               [
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: languages.map((lang) {
-                    final isSelected =
-                        settingsProvider.locale.languageCode == lang['code'];
-                    return ChoiceChip(
-                      label: Text(lang['name']!),
-                      selected: isSelected,
-                      onSelected: (_) =>
-                          settingsProvider.setLocale(lang['code']!),
-                      selectedColor: colorScheme.primary,
-                      labelStyle: TextStyle(
-                        color:
-                            isSelected ? Colors.white : colorScheme.onSurface,
+                for (final lang in languages)
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        settingsProvider.setLocale(lang['code']!);
+                      },
+                      borderRadius: BorderRadius.circular(14),
+                      splashColor: colorScheme.primary.withValues(alpha: 0.2),
+                      highlightColor:
+                          colorScheme.primary.withValues(alpha: 0.08),
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: settingsProvider.locale.languageCode ==
+                                  lang['code']
+                              ? colorScheme.primary.withValues(alpha: 0.12)
+                              : colorScheme.surfaceContainerHigh,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: settingsProvider.locale.languageCode ==
+                                    lang['code']
+                                ? colorScheme.primary
+                                : Colors.transparent,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              lang['name']!,
+                              style: GoogleFonts.lexend(
+                                fontSize: 15,
+                                fontWeight:
+                                    settingsProvider.locale.languageCode ==
+                                            lang['code']
+                                        ? FontWeight.w600
+                                        : FontWeight.w500,
+                                color: settingsProvider.locale.languageCode ==
+                                        lang['code']
+                                    ? colorScheme.primary
+                                    : colorScheme.onSurface,
+                              ),
+                            ),
+                            const Spacer(),
+                            if (settingsProvider.locale.languageCode ==
+                                lang['code'])
+                              Icon(
+                                Icons.check_circle,
+                                color: colorScheme.primary,
+                                size: 20,
+                              ),
+                          ],
+                        ),
                       ),
-                    );
-                  }).toList(),
-                ),
+                    ),
+                  ),
               ],
               colorScheme,
             ),

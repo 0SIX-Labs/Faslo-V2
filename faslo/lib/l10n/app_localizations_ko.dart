@@ -463,4 +463,22 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get shareCompleted => '단식 완료';
+
+  @override
+  String get greetingMorning => 'Good morning';
+
+  @override
+  String get greetingAfternoon => 'Good afternoon';
+
+  @override
+  String get greetingEvening => 'Good evening';
+
+  @override
+  String get encourageKeepGoing => 'Keep going';
+
+  @override
+  String get encourageDoingGreat => 'You\'re doing great';
+
+  @override
+  String get encourageStayStrong => 'Stay strong';
 }

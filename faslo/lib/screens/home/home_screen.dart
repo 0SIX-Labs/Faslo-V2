@@ -61,7 +61,6 @@ class _HomeScreenState extends State<HomeScreen>
     final fastProvider = context.watch<FastProvider>();
     final phase = currentPhase(fastProvider.elapsed);
     final colorScheme = Theme.of(context).colorScheme;
-    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: Container(
@@ -191,12 +190,14 @@ class _HomeScreenState extends State<HomeScreen>
     final hour = DateTime.now().hour;
     String greeting;
     final userName = settingsProvider.userName;
+    final loc = AppLocalizations.of(context)!;
+
     if (hour < 12) {
-      greeting = 'Good morning';
+      greeting = loc.greetingMorning;
     } else if (hour < 17) {
-      greeting = 'Good afternoon';
+      greeting = loc.greetingAfternoon;
     } else {
-      greeting = 'Good evening';
+      greeting = loc.greetingEvening;
     }
 
     if (userName.isNotEmpty) {
@@ -208,11 +209,11 @@ class _HomeScreenState extends State<HomeScreen>
     if (fastProvider.isFasting) {
       final hours = fastProvider.elapsed.inHours;
       if (hours >= 12) {
-        greeting = 'Keep going';
+        greeting = loc.encourageKeepGoing;
       } else if (hours >= 8) {
-        greeting = 'You\'re doing great';
+        greeting = loc.encourageDoingGreat;
       } else if (hours >= 4) {
-        greeting = 'Stay strong';
+        greeting = loc.encourageStayStrong;
       }
     }
 
@@ -579,6 +580,7 @@ class _HomeScreenState extends State<HomeScreen>
   void _showCompletionSnackBar(dynamic session) {
     final fastProvider = context.read<FastProvider>();
     final colorScheme = Theme.of(context).colorScheme;
+    final GlobalKey repaintKey = GlobalKey();
 
     showModalBottomSheet(
       context: context,
@@ -607,10 +609,14 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               const SizedBox(height: 24),
               // Share Card
-              ShareCard(
-                elapsed: session.elapsed,
-                streak: fastProvider.streak,
-                planRatio: session.planRatio,
+              RepaintBoundary(
+                key: repaintKey,
+                child: ShareCard(
+                  elapsed: session.elapsed,
+                  streak: fastProvider.streak,
+                  planRatio: session.planRatio,
+                  completedAt: session.endTime ?? DateTime.now(),
+                ),
               ),
               const SizedBox(height: 24),
               // Share Button
@@ -619,14 +625,11 @@ class _HomeScreenState extends State<HomeScreen>
                 height: 52,
                 child: FilledButton.icon(
                   onPressed: () {
-                    ShareService.shareFast(
-                      session: session,
-                      streak: fastProvider.streak,
-                    );
+                    ShareService.shareImage(repaintKey);
                   },
                   icon: const Icon(Icons.share_rounded, size: 20),
                   label: Text(
-                    'Share',
+                    AppLocalizations.of(context)!.shareButton,
                     style: GoogleFonts.lexend(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
@@ -654,7 +657,7 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ),
                   child: Text(
-                    'Done',
+                    AppLocalizations.of(context)!.shareDone,
                     style: GoogleFonts.lexend(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,

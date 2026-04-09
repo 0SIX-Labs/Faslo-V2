@@ -991,6 +991,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'FAST COMPLETED'**
   String get shareCompleted;
+
+  /// No description provided for @greetingMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get greetingMorning;
+
+  /// No description provided for @greetingAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get greetingAfternoon;
+
+  /// No description provided for @greetingEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get greetingEvening;
+
+  /// No description provided for @encourageKeepGoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going'**
+  String get encourageKeepGoing;
+
+  /// No description provided for @encourageDoingGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re doing great'**
+  String get encourageDoingGreat;
+
+  /// No description provided for @encourageStayStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay strong'**
+  String get encourageStayStrong;
 }
 
 class _AppLocalizationsDelegate
