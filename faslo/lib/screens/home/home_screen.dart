@@ -141,29 +141,40 @@ class _HomeScreenState extends State<HomeScreen>
         children: [
           FadeTransition(
             opacity: _fadeAnimation,
-            child: SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  const SizedBox(height: 24),
-                  // 1. Greeting (small, subtle)
-                  _buildGreeting(colorScheme, settingsProvider, fastProvider),
-                  const Spacer(),
-                  // 2. MAIN FASTING RING (centerpiece) - ~60% of vertical space
-                  _buildMainFastingRing(fastProvider, colorScheme, phase),
-                  const SizedBox(height: 24),
-                  // 2.5 Milestone Progress Bar
-                  if (fastProvider.isFasting)
-                    _buildMilestoneProgressBar(fastProvider, colorScheme),
-                  const SizedBox(height: 24),
-                  // 3. WATER LOGGING WIDGET
-                  _buildWaterWidget(),
-                  const Spacer(),
-                  // 5. PRIMARY BUTTON - Start Fast / End Fast
-                  _buildPrimaryButton(fastProvider, colorScheme),
-                  SizedBox(height: fastProvider.isFasting ? 18 : 32),
-                ],
-              ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const SizedBox(height: 24),
+                        // 1. Greeting (small, subtle)
+                        _buildGreeting(
+                            colorScheme, settingsProvider, fastProvider),
+                        const Spacer(),
+                        // 2. MAIN FASTING RING (centerpiece) - ~60% of vertical space
+                        _buildMainFastingRing(fastProvider, colorScheme, phase),
+                        const SizedBox(height: 24),
+                        // 2.5 Milestone Progress Bar
+                        if (fastProvider.isFasting)
+                          _buildMilestoneProgressBar(fastProvider, colorScheme),
+                        const SizedBox(height: 24),
+                        // 3. WATER LOGGING WIDGET
+                        _buildWaterWidget(),
+                        const Spacer(),
+                        // 5. PRIMARY BUTTON - Start Fast / End Fast
+                        _buildPrimaryButton(fastProvider, colorScheme),
+                        SizedBox(height: fastProvider.isFasting ? 18 : 32),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
           // Confetti
@@ -265,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen>
                 elapsed: fastProvider.elapsed,
                 targetHours: fastProvider.activePlan.fastHours,
                 isFasting: fastProvider.isFasting,
-              ),
+          
             ),
           ),
         );
