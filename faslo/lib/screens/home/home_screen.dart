@@ -284,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  Widget _buildPhaseCard(FastingPhase phase, FastProvider fastProvider) {
+  Widget buildPhaseCard(FastingPhase phase, FastProvider fastProvider) {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
       duration: const Duration(milliseconds: 1800),
