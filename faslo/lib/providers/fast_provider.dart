@@ -131,7 +131,7 @@ class FastProvider extends ChangeNotifier {
         if (_elapsed.inSeconds % 60 == 0) {
           final endTime =
               _fastStart!.add(Duration(hours: _activePlan.fastHours));
-          NotificationService.updateOngoingNotification(endTime);
+          NotificationService.updateOngoingNotification('en', endTime);
         }
 
         notifyListeners();
@@ -146,12 +146,12 @@ class FastProvider extends ChangeNotifier {
     final endTime = _fastStart!.add(Duration(hours: _activePlan.fastHours));
 
     // Show start notification
-    await NotificationService.showFastStarted(endTime);
+    await NotificationService.showFastStarted('en', endTime);
 
     // Schedule milestone notifications
     await NotificationService.scheduleHalfway(
-        _fastStart!, _activePlan.fastHours);
-    await NotificationService.scheduleKetosis(_fastStart!);
+        'en', _fastStart!, _activePlan.fastHours);
+    await NotificationService.scheduleKetosis('en', _fastStart!);
 
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -187,7 +187,7 @@ class FastProvider extends ChangeNotifier {
 
     // Show completion notification if fast was at least 1 hour
     if (hours >= 1) {
-      await NotificationService.showFastComplete(hours);
+      await NotificationService.showFastComplete('en', hours);
     }
     try {
       final prefs = await SharedPreferences.getInstance();

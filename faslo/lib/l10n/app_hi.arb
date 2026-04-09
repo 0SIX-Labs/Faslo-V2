@@ -153,6 +153,15 @@
   "shareBranding": "FASLO",
   "shareCompleted": "उपवास पूर्ण",
 
+  "fastingActiveTitle": "फास्टिंग सक्रिय ⏳",
+  "fastingActiveBody": "फास्ट {hours} घंटे {minutes} मिनट में पूरा होगा",
+  "@fastingActiveBody": {
+    "placeholders": {
+      "hours": {"type": "int"},
+      "minutes": {"type": "int"}
+    }
+  },
+
   "greetingMorning": "सुप्रभात",
   "greetingAfternoon": "नमस्कार",
   "greetingEvening": "सुसंध्या",

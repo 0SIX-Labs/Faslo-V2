@@ -465,11 +465,11 @@ class AppLocalizationsJa extends AppLocalizations {
   String get shareCompleted => '断食完了';
 
   @override
-  String get fastingActiveTitle => 'Fasting Active ⏳';
+  String get fastingActiveTitle => '断食中 ⏳';
 
   @override
   String fastingActiveBody(int hours, int minutes) {
-    return 'Fast will complete in $hours h $minutes min';
+    return '断食終了まで $hours 時間 $minutes 分';
   }
 
   @override
@@ -489,4 +489,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get encourageStayStrong => '強く頑張りましょう';
+
+  @override
+  String get yourName => 'あなたの名前';
 }

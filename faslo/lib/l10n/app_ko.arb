@@ -153,6 +153,15 @@
   "shareBranding": "FASLO",
   "shareCompleted": "단식 완료",
 
+  "fastingActiveTitle": "단식 진행 중 ⏳",
+  "fastingActiveBody": "단식 완료까지 {hours}시간 {minutes}분 남았습니다",
+  "@fastingActiveBody": {
+    "placeholders": {
+      "hours": {"type": "int"},
+      "minutes": {"type": "int"}
+    }
+  },
+
   "greetingMorning": "좋은 아침입니다",
   "greetingAfternoon": "안녕하세요",
   "greetingEvening": "안녕하세요",

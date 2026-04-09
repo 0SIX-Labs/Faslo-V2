@@ -498,4 +498,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get encourageStayStrong => 'Stay strong';
+
+  @override
+  String get yourName => 'Your name';
 }

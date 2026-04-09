@@ -153,6 +153,15 @@
   "shareBranding": "FASLO",
   "shareCompleted": "FASTEN ABGESCHLOSSEN",
 
+  "fastingActiveTitle": "Fasten aktiv ⏳",
+  "fastingActiveBody": "Fasten endet in {hours} Std {minutes} Min",
+  "@fastingActiveBody": {
+    "placeholders": {
+      "hours": {"type": "int"},
+      "minutes": {"type": "int"}
+    }
+  },
+
   "greetingMorning": "Guten Morgen",
   "greetingAfternoon": "Guten Nachmittag",
   "greetingEvening": "Guten Abend",

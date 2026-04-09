@@ -474,11 +474,11 @@ class AppLocalizationsHi extends AppLocalizations {
   String get shareCompleted => 'उपवास पूर्ण';
 
   @override
-  String get fastingActiveTitle => 'Fasting Active ⏳';
+  String get fastingActiveTitle => 'फास्टिंग सक्रिय ⏳';
 
   @override
   String fastingActiveBody(int hours, int minutes) {
-    return 'Fast will complete in $hours h $minutes min';
+    return 'फास्ट $hours घंटे $minutes मिनट में पूरा होगा';
   }
 
   @override
@@ -498,4 +498,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get encourageStayStrong => 'मजबूत रहें';
+
+  @override
+  String get yourName => 'आपका नाम';
 }

@@ -1039,6 +1039,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stay strong'**
   String get encourageStayStrong;
+
+  /// No description provided for @yourName.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get yourName;
 }
 
 class _AppLocalizationsDelegate

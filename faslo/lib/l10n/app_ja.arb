@@ -153,6 +153,15 @@
   "shareBranding": "FASLO",
   "shareCompleted": "断食完了",
 
+  "fastingActiveTitle": "断食中 ⏳",
+  "fastingActiveBody": "断食終了まで {hours} 時間 {minutes} 分",
+  "@fastingActiveBody": {
+    "placeholders": {
+      "hours": {"type": "int"},
+      "minutes": {"type": "int"}
+    }
+  },
+
   "greetingMorning": "おはようございます",
   "greetingAfternoon": "こんにちは",
   "greetingEvening": "こんばんは",
