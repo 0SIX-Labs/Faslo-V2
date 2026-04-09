@@ -158,6 +158,15 @@
   "shareMessage": "Stay consistent.\nYour body thanks you.",
   "shareBranding": "FASLO",
   "shareCompleted": "FAST COMPLETED",
+
+  "fastingActiveTitle": "Fasting Active ⏳",
+  "fastingActiveBody": "Fast will complete in {hours} h {minutes} min",
+  "@fastingActiveBody": {
+    "placeholders": {
+      "hours": {"type": "int"},
+      "minutes": {"type": "int"}
+    }
+  },
   
   "greetingMorning": "Good morning",
   "greetingAfternoon": "Good afternoon",

@@ -465,6 +465,14 @@ class AppLocalizationsJa extends AppLocalizations {
   String get shareCompleted => '断食完了';
 
   @override
+  String get fastingActiveTitle => 'Fasting Active ⏳';
+
+  @override
+  String fastingActiveBody(int hours, int minutes) {
+    return 'Fast will complete in $hours h $minutes min';
+  }
+
+  @override
   String get greetingMorning => 'おはようございます';
 
   @override

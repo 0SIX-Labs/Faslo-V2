@@ -9,7 +9,8 @@ import '../l10n/app_localizations.dart';
 String formatElapsed(Duration d) {
   final h = d.inHours.toString().padLeft(2, '0');
   final m = (d.inMinutes % 60).toString().padLeft(2, '0');
-  return '$h:$m';
+  final s = (d.inSeconds % 60).toString().padLeft(2, '0');
+  return '$h:$m:$s';
 }
 
 class FastingRing extends StatefulWidget {
@@ -40,6 +41,7 @@ class _FastingRingState extends State<FastingRing>
   late Animation<double> _glowAnimation;
   late Animation<double> _rippleAnimation;
   Color? _previousPhaseColor;
+  bool _showRemainingTime = false;
 
   @override
   void initState() {
@@ -130,6 +132,11 @@ class _FastingRingState extends State<FastingRing>
 
   void _handleTap() {
     _rippleController.forward(from: 0.0);
+    if (widget.isFasting) {
+      setState(() {
+        _showRemainingTime = !_showRemainingTime;
+      });
+    }
   }
 
   @override
@@ -235,8 +242,10 @@ class _FastingRingState extends State<FastingRing>
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
           child: Text(
-            widget.isFasting ? 'FASTING' : 'READY',
-            key: ValueKey(widget.isFasting),
+            _showRemainingTime
+                ? 'REMAINING'
+                : (widget.isFasting ? 'FASTING' : 'READY'),
+            key: ValueKey(_showRemainingTime),
             style: GoogleFonts.lexend(
               fontSize: 11,
               fontWeight: FontWeight.w500,
@@ -258,9 +267,13 @@ class _FastingRingState extends State<FastingRing>
               child: Opacity(
                 opacity: value,
                 child: Text(
-                  formatElapsed(widget.elapsed),
+                  _showRemainingTime
+                      ? formatElapsed(Duration(
+                          seconds: (widget.targetHours * 3600) -
+                              widget.elapsed.inSeconds))
+                      : formatElapsed(widget.elapsed),
                   style: GoogleFonts.lexend(
-                    fontSize: 44,
+                    fontSize: 36,
                     fontWeight: FontWeight.w300,
                     color: colorScheme.onSurface,
                     letterSpacing: 2,

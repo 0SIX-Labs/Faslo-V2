@@ -992,6 +992,18 @@ abstract class AppLocalizations {
   /// **'FAST COMPLETED'**
   String get shareCompleted;
 
+  /// No description provided for @fastingActiveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fasting Active ⏳'**
+  String get fastingActiveTitle;
+
+  /// No description provided for @fastingActiveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast will complete in {hours} h {minutes} min'**
+  String fastingActiveBody(int hours, int minutes);
+
   /// No description provided for @greetingMorning.
   ///
   /// In en, this message translates to:

@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tzdata;
+import '../l10n/app_localizations.dart';
 
 class NotificationService {
   static final _plugin = FlutterLocalNotificationsPlugin();
@@ -19,10 +21,18 @@ class NotificationService {
       const InitializationSettings(android: android, iOS: ios),
     );
     // Request Android 13+ notification permission
-    await _plugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestNotificationsPermission();
+    final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+
+    await androidPlugin?.requestNotificationsPermission();
+
+    // Request Android 14+ exact alarm permission
+    try {
+      await androidPlugin?.requestExactAlarmsPermission();
+    } catch (e) {
+      // Ignore if platform doesn't support this
+    }
+
     _initialised = true;
   }
 
@@ -43,11 +53,12 @@ class NotificationService {
     presentSound: true,
   );
 
-  static Future<void> showFastComplete(int hours) async {
+  static Future<void> showFastComplete(BuildContext context, int hours) async {
+    final l10n = AppLocalizations.of(context)!;
     await _plugin.show(
       1,
-      'Fast Complete! 🎉',
-      'Your ${hours}h fast is done. Amazing work.',
+      l10n.fastCompletedTitle,
+      l10n.fastCompletedBody(hours),
       NotificationDetails(
         android: _androidDetails('fast_complete', 'Fast Complete'),
         iOS: _iosDetails,
@@ -56,76 +67,136 @@ class NotificationService {
   }
 
   static Future<void> scheduleHalfway(
-      DateTime fastStart, int targetHours) async {
+      BuildContext context, DateTime fastStart, int targetHours) async {
     final halfwayTime = fastStart.add(Duration(hours: targetHours ~/ 2));
     if (halfwayTime.isBefore(DateTime.now())) return;
-    await _plugin.zonedSchedule(
-      2,
-      'Halfway There 🔥',
-      'You are halfway through your fast. Keep going!',
-      tz.TZDateTime.from(halfwayTime, tz.local),
-      NotificationDetails(
-        android: _androidDetails('milestones', 'Fasting Milestones'),
-        iOS: _iosDetails,
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-    );
-  }
+    final l10n = AppLocalizations.of(context)!;
 
-  static Future<void> scheduleKetosis(DateTime fastStart) async {
-    final ketosisTime = fastStart.add(const Duration(hours: 12));
-    if (ketosisTime.isBefore(DateTime.now())) return;
-    await _plugin.zonedSchedule(
-      3,
-      'Ketosis Reached 💫',
-      'Your body has entered ketosis. Fat burning is in full effect.',
-      tz.TZDateTime.from(ketosisTime, tz.local),
-      NotificationDetails(
-        android: _androidDetails('milestones', 'Fasting Milestones'),
-        iOS: _iosDetails,
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-    );
-  }
-
-  static Future<void> scheduleWaterReminders() async {
-    // Cancel existing, schedule every 90 min during 8am–9pm
-    await _plugin.cancel(10);
-    for (int i = 0; i < 9; i++) {
-      final now = DateTime.now();
-      var remind = DateTime(now.year, now.month, now.day, 8)
-          .add(Duration(minutes: 90 * i));
-      if (remind.isBefore(now)) remind = remind.add(const Duration(days: 1));
+    try {
       await _plugin.zonedSchedule(
-        10 + i,
-        'Stay Hydrated 💧',
-        'Time to drink a glass of water.',
-        tz.TZDateTime.from(remind, tz.local),
+        2,
+        l10n.halfwayTitle,
+        l10n.halfwayBody,
+        tz.TZDateTime.from(halfwayTime, tz.local),
         NotificationDetails(
-          android: _androidDetails('water', 'Water Reminders'),
+          android: _androidDetails('milestones', 'Fasting Milestones'),
           iOS: _iosDetails,
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time,
+      );
+    } catch (e) {
+      // Fallback to inexact if exact permission is denied
+      await _plugin.zonedSchedule(
+        2,
+        l10n.halfwayTitle,
+        l10n.halfwayBody,
+        tz.TZDateTime.from(halfwayTime, tz.local),
+        NotificationDetails(
+          android: _androidDetails('milestones', 'Fasting Milestones'),
+          iOS: _iosDetails,
+        ),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
       );
     }
   }
 
-  static Future<void> showFastStarted(DateTime endTime) async {
+  static Future<void> scheduleKetosis(
+      BuildContext context, DateTime fastStart) async {
+    final ketosisTime = fastStart.add(const Duration(hours: 12));
+    if (ketosisTime.isBefore(DateTime.now())) return;
+    final l10n = AppLocalizations.of(context)!;
+
+    try {
+      await _plugin.zonedSchedule(
+        3,
+        l10n.ketosisTitle,
+        l10n.ketosisBody,
+        tz.TZDateTime.from(ketosisTime, tz.local),
+        NotificationDetails(
+          android: _androidDetails('milestones', 'Fasting Milestones'),
+          iOS: _iosDetails,
+        ),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    } catch (e) {
+      // Fallback to inexact if exact permission is denied
+      await _plugin.zonedSchedule(
+        3,
+        l10n.ketosisTitle,
+        l10n.ketosisBody,
+        tz.TZDateTime.from(ketosisTime, tz.local),
+        NotificationDetails(
+          android: _androidDetails('milestones', 'Fasting Milestones'),
+          iOS: _iosDetails,
+        ),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    }
+  }
+
+  static Future<void> scheduleWaterReminders(BuildContext context) async {
+    // Cancel existing, schedule every 90 min during 8am–9pm
+    await _plugin.cancel(10);
+    final l10n = AppLocalizations.of(context)!;
+    for (int i = 0; i < 9; i++) {
+      final now = DateTime.now();
+      var remind = DateTime(now.year, now.month, now.day, 8)
+          .add(Duration(minutes: 90 * i));
+      if (remind.isBefore(now)) remind = remind.add(const Duration(days: 1));
+      try {
+        await _plugin.zonedSchedule(
+          10 + i,
+          l10n.waterReminderTitle,
+          l10n.waterReminderBody,
+          tz.TZDateTime.from(remind, tz.local),
+          NotificationDetails(
+            android: _androidDetails('water', 'Water Reminders'),
+            iOS: _iosDetails,
+          ),
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+          matchDateTimeComponents: DateTimeComponents.time,
+        );
+      } catch (e) {
+        // Fallback to inexact if exact permission is denied
+        await _plugin.zonedSchedule(
+          10 + i,
+          l10n.waterReminderTitle,
+          l10n.waterReminderBody,
+          tz.TZDateTime.from(remind, tz.local),
+          NotificationDetails(
+            android: _androidDetails('water', 'Water Reminders'),
+            iOS: _iosDetails,
+          ),
+          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+          matchDateTimeComponents: DateTimeComponents.time,
+        );
+      }
+    }
+  }
+
+  static Future<void> showFastStarted(
+      BuildContext context, DateTime endTime) async {
     final diff = endTime.difference(DateTime.now());
     final hours = diff.inHours;
     final minutes = diff.inMinutes.remainder(60);
+    final l10n = AppLocalizations.of(context)!;
 
     await _plugin.show(
       0,
-      'Fasting Active ⏳',
-      'Fast will complete in $hours h $minutes min',
+      l10n.fastingActiveTitle,
+      l10n.fastingActiveBody(hours, minutes),
       NotificationDetails(
         android: AndroidNotificationDetails(
           'fast_active',
@@ -145,7 +216,8 @@ class NotificationService {
     );
   }
 
-  static Future<void> updateOngoingNotification(DateTime endTime) async {
+  static Future<void> updateOngoingNotification(
+      BuildContext context, DateTime endTime) async {
     if (endTime.isBefore(DateTime.now())) {
       await _plugin.cancel(0);
       return;
@@ -154,11 +226,12 @@ class NotificationService {
     final diff = endTime.difference(DateTime.now());
     final hours = diff.inHours;
     final minutes = diff.inMinutes.remainder(60);
+    final l10n = AppLocalizations.of(context)!;
 
     await _plugin.show(
       0,
-      'Fasting Active ⏳',
-      'Fast will complete in $hours h $minutes min',
+      l10n.fastingActiveTitle,
+      l10n.fastingActiveBody(hours, minutes),
       NotificationDetails(
         android: AndroidNotificationDetails(
           'fast_active',
