@@ -151,5 +151,13 @@
   "@shareStreak": {"placeholders": {"n": {"type": "int"}}},
   "shareMessage": "निरंतर बने रहें।\nआपका शरीर धन्यवाद कर रहा है।",
   "shareBranding": "FASLO",
-  "shareCompleted": "उपवास पूर्ण"
+  "shareCompleted": "उपवास पूर्ण",
+
+  "greetingMorning": "सुप्रभात",
+  "greetingAfternoon": "नमस्कार",
+  "greetingEvening": "सुसंध्या",
+
+  "encourageKeepGoing": "जारी रखें",
+  "encourageDoingGreat": "आप बहुत अच्छा कर रहे हैं",
+  "encourageStayStrong": "मजबूत रहें"
 }

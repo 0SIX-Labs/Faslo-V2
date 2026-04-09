@@ -151,5 +151,13 @@
   "@shareStreak": {"placeholders": {"n": {"type": "int"}}},
   "shareMessage": "꾸준히 계속하세요.\n몸이 감사하고 있습니다.",
   "shareBranding": "FASLO",
-  "shareCompleted": "단식 완료"
+  "shareCompleted": "단식 완료",
+
+  "greetingMorning": "좋은 아침입니다",
+  "greetingAfternoon": "안녕하세요",
+  "greetingEvening": "안녕하세요",
+
+  "encourageKeepGoing": "계속 힘내세요",
+  "encourageDoingGreat": "잘 하고 계십니다",
+  "encourageStayStrong": "힘내세요"
 }

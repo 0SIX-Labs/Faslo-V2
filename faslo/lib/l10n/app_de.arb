@@ -151,5 +151,13 @@
   "@shareStreak": {"placeholders": {"n": {"type": "int"}}},
   "shareMessage": "Bleib konsequent.\nDein Körper dankt es dir.",
   "shareBranding": "FASLO",
-  "shareCompleted": "FASTEN ABGESCHLOSSEN"
+  "shareCompleted": "FASTEN ABGESCHLOSSEN",
+
+  "greetingMorning": "Guten Morgen",
+  "greetingAfternoon": "Guten Nachmittag",
+  "greetingEvening": "Guten Abend",
+
+  "encourageKeepGoing": "Mach weiter so",
+  "encourageDoingGreat": "Du machst das großartig",
+  "encourageStayStrong": "Bleib stark"
 }
