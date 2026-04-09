@@ -276,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen>
                 elapsed: fastProvider.elapsed,
                 targetHours: fastProvider.activePlan.fastHours,
                 isFasting: fastProvider.isFasting,
-          
+              ),
             ),
           ),
         );
