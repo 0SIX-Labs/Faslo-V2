@@ -151,8 +151,13 @@ class _HomeScreenState extends State<HomeScreen>
                 _buildMainFastingRing(fastProvider, colorScheme, phase),
                 const SizedBox(height: 24),
                 // 2.5 Milestone Progress Bar
-                if (fastProvider.isFasting)
-                  _buildMilestoneProgressBar(fastProvider, colorScheme),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: fastProvider.isFasting
+                      ? _buildMilestoneProgressBar(fastProvider, colorScheme)
+                      : const SizedBox.shrink(),
+                ),
                 const SizedBox(height: 24),
                 // 3. WATER LOGGING WIDGET
                 _buildWaterWidget(),
