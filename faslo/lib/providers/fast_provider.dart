@@ -8,6 +8,7 @@ import '../core/constants/pref_keys.dart';
 import '../core/constants/fasting_plans.dart';
 import '../core/utils/debounce.dart';
 import '../models/fast_session.dart';
+import '../services/notification_service.dart';
 
 class FastProvider extends ChangeNotifier {
   FastingPlan _activePlan = fastingPlans[2]; // 16:8 default
@@ -125,6 +126,14 @@ class FastProvider extends ChangeNotifier {
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
       if (_fastStart != null) {
         _elapsed = DateTime.now().difference(_fastStart!);
+
+        // Update ongoing notification every minute
+        if (_elapsed.inSeconds % 60 == 0) {
+          final endTime =
+              _fastStart!.add(Duration(hours: _activePlan.fastHours));
+          NotificationService.updateOngoingNotification(endTime);
+        }
+
         notifyListeners();
       }
     });
@@ -133,6 +142,17 @@ class FastProvider extends ChangeNotifier {
   Future<void> startFast() async {
     _fastStart = DateTime.now();
     _startTicker();
+
+    final endTime = _fastStart!.add(Duration(hours: _activePlan.fastHours));
+
+    // Show start notification
+    await NotificationService.showFastStarted(endTime);
+
+    // Schedule milestone notifications
+    await NotificationService.scheduleHalfway(
+        _fastStart!, _activePlan.fastHours);
+    await NotificationService.scheduleKetosis(_fastStart!);
+
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(
@@ -146,6 +166,10 @@ class FastProvider extends ChangeNotifier {
   Future<FastSession?> stopFast() async {
     if (_fastStart == null) return null;
     _ticker?.cancel();
+
+    final duration = DateTime.now().difference(_fastStart!);
+    final hours = duration.inHours;
+
     final session = FastSession(
       id: const Uuid().v4(),
       startTime: _fastStart!,
@@ -156,6 +180,15 @@ class FastProvider extends ChangeNotifier {
     );
     _fastStart = null;
     _elapsed = Duration.zero;
+
+    // Cancel all scheduled notifications and ongoing notification
+    await NotificationService.cancelOngoing();
+    await NotificationService.cancelAll();
+
+    // Show completion notification if fast was at least 1 hour
+    if (hours >= 1) {
+      await NotificationService.showFastComplete(hours);
+    }
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(PrefKeys.activeFastStart);

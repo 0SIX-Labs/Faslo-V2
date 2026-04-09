@@ -117,5 +117,71 @@ class NotificationService {
     }
   }
 
+  static Future<void> showFastStarted(DateTime endTime) async {
+    final diff = endTime.difference(DateTime.now());
+    final hours = diff.inHours;
+    final minutes = diff.inMinutes.remainder(60);
+
+    await _plugin.show(
+      0,
+      'Fasting Active ⏳',
+      'Fast will complete in $hours h $minutes min',
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'fast_active',
+          'Active Fast',
+          importance: Importance.low,
+          priority: Priority.low,
+          ongoing: true,
+          showWhen: true,
+          when: endTime.millisecondsSinceEpoch,
+          usesChronometer: true,
+          chronometerCountDown: true,
+          autoCancel: false,
+          enableVibration: false,
+        ),
+        iOS: _iosDetails,
+      ),
+    );
+  }
+
+  static Future<void> updateOngoingNotification(DateTime endTime) async {
+    if (endTime.isBefore(DateTime.now())) {
+      await _plugin.cancel(0);
+      return;
+    }
+
+    final diff = endTime.difference(DateTime.now());
+    final hours = diff.inHours;
+    final minutes = diff.inMinutes.remainder(60);
+
+    await _plugin.show(
+      0,
+      'Fasting Active ⏳',
+      'Fast will complete in $hours h $minutes min',
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'fast_active',
+          'Active Fast',
+          importance: Importance.low,
+          priority: Priority.low,
+          ongoing: true,
+          showWhen: true,
+          when: endTime.millisecondsSinceEpoch,
+          usesChronometer: true,
+          chronometerCountDown: true,
+          autoCancel: false,
+          enableVibration: false,
+          silent: true,
+        ),
+        iOS: _iosDetails,
+      ),
+    );
+  }
+
+  static Future<void> cancelOngoing() async {
+    await _plugin.cancel(0);
+  }
+
   static Future<void> cancelAll() async => _plugin.cancelAll();
 }

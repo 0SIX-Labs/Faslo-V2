@@ -477,20 +477,20 @@ class AppLocalizationsDe extends AppLocalizations {
   String get shareCompleted => 'FASTEN ABGESCHLOSSEN';
 
   @override
-  String get greetingMorning => 'Good morning';
+  String get greetingMorning => 'Guten Morgen';
 
   @override
-  String get greetingAfternoon => 'Good afternoon';
+  String get greetingAfternoon => 'Guten Nachmittag';
 
   @override
-  String get greetingEvening => 'Good evening';
+  String get greetingEvening => 'Guten Abend';
 
   @override
-  String get encourageKeepGoing => 'Keep going';
+  String get encourageKeepGoing => 'Mach weiter so';
 
   @override
-  String get encourageDoingGreat => 'You\'re doing great';
+  String get encourageDoingGreat => 'Du machst das großartig';
 
   @override
-  String get encourageStayStrong => 'Stay strong';
+  String get encourageStayStrong => 'Bleib stark';
 }

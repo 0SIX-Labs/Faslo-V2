@@ -474,20 +474,20 @@ class AppLocalizationsHi extends AppLocalizations {
   String get shareCompleted => 'उपवास पूर्ण';
 
   @override
-  String get greetingMorning => 'Good morning';
+  String get greetingMorning => 'सुप्रभात';
 
   @override
-  String get greetingAfternoon => 'Good afternoon';
+  String get greetingAfternoon => 'नमस्कार';
 
   @override
-  String get greetingEvening => 'Good evening';
+  String get greetingEvening => 'सुसंध्या';
 
   @override
-  String get encourageKeepGoing => 'Keep going';
+  String get encourageKeepGoing => 'जारी रखें';
 
   @override
-  String get encourageDoingGreat => 'You\'re doing great';
+  String get encourageDoingGreat => 'आप बहुत अच्छा कर रहे हैं';
 
   @override
-  String get encourageStayStrong => 'Stay strong';
+  String get encourageStayStrong => 'मजबूत रहें';
 }

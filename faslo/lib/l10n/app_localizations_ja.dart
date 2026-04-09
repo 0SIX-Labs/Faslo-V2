@@ -465,20 +465,20 @@ class AppLocalizationsJa extends AppLocalizations {
   String get shareCompleted => '断食完了';
 
   @override
-  String get greetingMorning => 'Good morning';
+  String get greetingMorning => 'おはようございます';
 
   @override
-  String get greetingAfternoon => 'Good afternoon';
+  String get greetingAfternoon => 'こんにちは';
 
   @override
-  String get greetingEvening => 'Good evening';
+  String get greetingEvening => 'こんばんは';
 
   @override
-  String get encourageKeepGoing => 'Keep going';
+  String get encourageKeepGoing => 'その調子で続けてください';
 
   @override
-  String get encourageDoingGreat => 'You\'re doing great';
+  String get encourageDoingGreat => '素晴らしいです';
 
   @override
-  String get encourageStayStrong => 'Stay strong';
+  String get encourageStayStrong => '強く頑張りましょう';
 }

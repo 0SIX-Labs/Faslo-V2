@@ -104,7 +104,6 @@ class _FasloAppState extends State<FasloApp> with WidgetsBindingObserver {
     final settingsProvider = context.watch<SettingsProvider>();
 
     return MaterialApp(
-      key: ValueKey(settingsProvider.locale),
       title: 'Faslo',
       debugShowCheckedModeBanner: false,
       theme: themeProvider.themeData,

@@ -80,6 +80,20 @@ class SettingsScreen extends StatelessWidget {
               colorScheme,
             ),
             const SizedBox(height: 16),
+            // Profile
+            _buildSection(
+              'Profile',
+              [
+                ListTile(
+                  title: const Text('Your Name'),
+                  subtitle: Text(settingsProvider.userName),
+                  trailing: const Icon(Icons.edit_rounded),
+                  onTap: () => _showNameEditor(context, settingsProvider),
+                ),
+              ],
+              colorScheme,
+            ),
+            const SizedBox(height: 16),
             // Language
             _buildSection(
               'Language',
@@ -386,6 +400,40 @@ class SettingsScreen extends StatelessWidget {
                 Navigator.pop(context);
               },
               child: const Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showNameEditor(
+      BuildContext context, SettingsProvider settingsProvider) {
+    final controller = TextEditingController(text: settingsProvider.userName);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Edit Name'),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            decoration: const InputDecoration(
+              hintText: 'Enter your name',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                settingsProvider.setUserName(controller.text.trim());
+                Navigator.pop(context);
+              },
+              child: const Text('Save'),
             ),
           ],
         );
