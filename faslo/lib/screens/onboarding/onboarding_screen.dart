@@ -342,6 +342,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               keyboardType: TextInputType.name,
               textCapitalization: TextCapitalization.words,
               textDirection: TextDirection.ltr,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (_) => FocusScope.of(context).unfocus(),
             ),
           ),
           const SizedBox(height: 32),

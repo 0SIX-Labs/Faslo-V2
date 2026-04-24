@@ -59,3 +59,80 @@ class _LanguagePickerState extends State<LanguagePicker> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+
+    return Column(
+      children: [
+        Expanded(
+          child: ListWheelScrollView.useDelegate(
+            itemExtent: 50,
+            perspective: 0.005,
+            diameterRatio: 1.5,
+            physics: const FixedExtentScrollPhysics(),
+            controller: _scrollController,
+            onSelectedItemChanged: (index) {
+              setState(() => _selectedIndex = index);
+            },
+            childDelegate: ListWheelChildBuilderDelegate(
+              childCount: widget.languages.length,
+              builder: (context, index) {
+                final lang = widget.languages[index];
+                final isVisible = index == _selectedIndex;
+
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeOutCubic,
+                  margin: const EdgeInsets.symmetric(horizontal: 24),
+                  decoration: BoxDecoration(
+                    color: isVisible
+                        ? colorScheme.primary.withValues(alpha: 0.12)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Center(
+                    child: Text(
+                      lang['name']!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.lexend(
+                        fontSize: isVisible ? 18 : 16,
+                        fontWeight:
+                            isVisible ? FontWeight.w600 : FontWeight.w400,
+                        color: isVisible
+                            ? colorScheme.primary
+                            : colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Align(
+          alignment: Alignment.center,
+          child: GestureDetector(
+            onTap: _confirmSelection,
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 48,
+                vertical: 14,
+              ),
+              decoration: BoxDecoration(
+                color: colorScheme.primary,
+                borderRadius: BorderRadius.circular(9999),
+              ),
+              child: Text(
+                'Change Language',
+                style: TextStyle(
+                  color: colorScheme.onPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

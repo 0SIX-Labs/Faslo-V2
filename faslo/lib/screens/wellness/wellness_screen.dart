@@ -5,6 +5,7 @@ import '../../providers/settings_provider.dart';
 import '../../core/theme/theme_provider.dart';
 import '../../core/theme/app_theme.dart';
 import '../../l10n/app_localizations.dart';
+import '../../widgets/language_picker.dart';
 
 class WellnessScreen extends StatefulWidget {
   const WellnessScreen({super.key});
@@ -193,102 +194,10 @@ class _WellnessScreenState extends State<WellnessScreen> {
                     const SizedBox(height: 16),
                     SizedBox(
                       height: 180,
-                      child: StatefulBuilder(
-                        builder: (context, setState) {
-                          int tempSelectedIndex = languages.indexWhere((lang) =>
-                              lang['code'] ==
-                              settingsProvider.locale.languageCode);
-
-                          final scrollController = FixedExtentScrollController(
-                            initialItem: tempSelectedIndex,
-                          );
-
-                          return Column(
-                            children: [
-                              Expanded(
-                                child: ListWheelScrollView.useDelegate(
-                                  itemExtent: 50,
-                                  perspective: 0.005,
-                                  diameterRatio: 1.5,
-                                  physics: const FixedExtentScrollPhysics(),
-                                  controller: scrollController,
-                                  onSelectedItemChanged: (index) {
-                                    setState(() => tempSelectedIndex = index);
-                                  },
-                                  childDelegate: ListWheelChildBuilderDelegate(
-                                    childCount: languages.length,
-                                    builder: (context, index) {
-                                      final lang = languages[index];
-                                      final isVisible =
-                                          index == tempSelectedIndex;
-
-                                      return AnimatedContainer(
-                                        duration:
-                                            const Duration(milliseconds: 250),
-                                        curve: Curves.easeOutCubic,
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 24),
-                                        decoration: BoxDecoration(
-                                          color: isVisible
-                                              ? colorScheme.primary
-                                                  .withValues(alpha: 0.12)
-                                              : Colors.transparent,
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            lang['name']!,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.lexend(
-                                              fontSize: isVisible ? 18 : 16,
-                                              fontWeight: isVisible
-                                                  ? FontWeight.w600
-                                                  : FontWeight.w400,
-                                              color: isVisible
-                                                  ? colorScheme.primary
-                                                  : colorScheme
-                                                      .onSurfaceVariant,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Align(
-                                alignment: Alignment.center,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    final index = scrollController.selectedItem;
-                                    settingsProvider
-                                        .setLocale(languages[index]['code']!);
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 48,
-                                      vertical: 14,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: colorScheme.primary,
-                                      borderRadius: BorderRadius.circular(9999),
-                                    ),
-                                    child: Text(
-                                      'Change Language',
-                                      style: TextStyle(
-                                        color: colorScheme.onPrimary,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
+                      child: LanguagePicker(
+                        languages: languages,
+                        selectedCode: settingsProvider.locale.languageCode,
+                        onSelected: (code) => settingsProvider.setLocale(code),
                       ),
                     ),
                   ],
