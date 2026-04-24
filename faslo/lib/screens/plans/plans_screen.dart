@@ -16,6 +16,7 @@ class PlansScreen extends StatefulWidget {
 class _PlansScreenState extends State<PlansScreen> {
   int _customFastHours = 16;
   int _customEatHours = 8;
+  bool _isProcessing = false;
 
   String _getLocalizedName(String key, AppLocalizations l10n) {
     switch (key) {
@@ -172,7 +173,9 @@ class _PlansScreenState extends State<PlansScreen> {
             // Customize button
             GradientButton(
               text: l10n.customizePlan,
-              onPressed: () => _showCustomizeSheet(context),
+              isLoading: _isProcessing,
+              onPressed:
+                  _isProcessing ? null : () => _showCustomizeSheet(context),
             ),
             const SizedBox(height: 24),
             // Motivational quote
@@ -205,9 +208,19 @@ class _PlansScreenState extends State<PlansScreen> {
     bool disabled = false,
   }) {
     return GestureDetector(
-      onTap: disabled || (context.read<FastProvider>().isFasting && !isActive)
+      onTap: disabled ||
+              _isProcessing ||
+              (context.read<FastProvider>().isFasting && !isActive)
           ? null
-          : () => context.read<FastProvider>().setActivePlan(plan),
+          : () async {
+              if (_isProcessing) return;
+              setState(() => _isProcessing = true);
+              try {
+                await context.read<FastProvider>().setActivePlan(plan);
+              } finally {
+                if (mounted) setState(() => _isProcessing = false);
+              }
+            },
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 200),
         opacity:
@@ -308,7 +321,17 @@ class _PlansScreenState extends State<PlansScreen> {
     AppLocalizations l10n,
   ) {
     return GestureDetector(
-      onTap: () => context.read<FastProvider>().setActivePlan(plan),
+      onTap: _isProcessing
+          ? null
+          : () async {
+              if (_isProcessing) return;
+              setState(() => _isProcessing = true);
+              try {
+                await context.read<FastProvider>().setActivePlan(plan);
+              } finally {
+                if (mounted) setState(() => _isProcessing = false);
+              }
+            },
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(16),

@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen>
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
   FastingPhase? _previousPhase;
+  bool _isProcessing = false;
 
   @override
   void initState() {
@@ -338,9 +339,16 @@ class _HomeScreenState extends State<HomeScreen>
     final l10n = AppLocalizations.of(context)!;
     return GradientButton(
       text: l10n.startFasting,
-      onPressed: () {
-        fastProvider.startFast();
-        HapticFeedback.mediumImpact();
+      isLoading: _isProcessing,
+      onPressed: () async {
+        if (_isProcessing) return;
+        setState(() => _isProcessing = true);
+        try {
+          await fastProvider.startFast();
+          HapticFeedback.mediumImpact();
+        } finally {
+          if (mounted) setState(() => _isProcessing = false);
+        }
       },
     );
   }
@@ -352,12 +360,19 @@ class _HomeScreenState extends State<HomeScreen>
     final l10n = AppLocalizations.of(context)!;
     return GradientButton(
       text: l10n.stopFasting,
+      isLoading: _isProcessing,
       onPressed: () async {
-        final session = await fastProvider.stopFast();
-        if (session != null && mounted) {
-          _confettiController.play();
-          HapticFeedback.heavyImpact();
-          _showCompletionSnackBar(session);
+        if (_isProcessing) return;
+        setState(() => _isProcessing = true);
+        try {
+          final session = await fastProvider.stopFast();
+          if (session != null && mounted) {
+            _confettiController.play();
+            HapticFeedback.heavyImpact();
+            _showCompletionSnackBar(session);
+          }
+        } finally {
+          if (mounted) setState(() => _isProcessing = false);
         }
       },
     );

@@ -27,6 +27,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final Set<String> _selectedGoals = {};
   FastingPlan? _selectedPlan;
   bool _doctorConsultAccepted = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -43,6 +44,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _nextPage() {
+    if (_isLoading) return;
+
     // Validate name on second page before proceeding
     if (_currentPage == 1 && _nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -66,6 +69,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Future<void> _completeOnboarding() async {
+    if (_isLoading) return;
+
     if (_selectedPlan == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -77,53 +82,76 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       return;
     }
 
+    setState(() => _isLoading = true);
+
     final settingsProvider = context.read<SettingsProvider>();
     final fastProvider = context.read<FastProvider>();
 
-    await settingsProvider.setUserName(_nameController.text);
-    await fastProvider.setActivePlan(_selectedPlan!);
+    try {
+      await settingsProvider.setUserName(_nameController.text);
+      await fastProvider.setActivePlan(_selectedPlan!);
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(PrefKeys.onboardingDone, true);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(PrefKeys.onboardingDone, true);
 
-    if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Something went wrong. Please try again.'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Progress bar
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: LinearProgressIndicator(
-                value: (_currentPage + 1) / 3,
-                backgroundColor:
-                    Theme.of(context).colorScheme.surfaceContainerHigh,
-                valueColor: AlwaysStoppedAnimation(
-                  Theme.of(context).colorScheme.primary,
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.translucent,
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: SafeArea(
+          child: Column(
+            children: [
+              // Progress bar
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: LinearProgressIndicator(
+                  value: (_currentPage + 1) / 3,
+                  backgroundColor:
+                      Theme.of(context).colorScheme.surfaceContainerHigh,
+                  valueColor: AlwaysStoppedAnimation(
+                    Theme.of(context).colorScheme.primary,
+                  ),
                 ),
               ),
-            ),
-            // Pages
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (page) => setState(() => _currentPage = page),
-                children: [
-                  _buildLanguagePage(),
-                  _buildWelcomePage(),
-                  _buildGoalsPage(),
-                ],
+              // Pages
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  onPageChanged: (page) => setState(() => _currentPage = page),
+                  children: [
+                    _buildLanguagePage(),
+                    _buildWelcomePage(keyboardHeight),
+                    _buildGoalsPage(keyboardHeight),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -242,7 +270,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const SizedBox(height: 48),
             GradientButton(
               text: AppLocalizations.of(context)!.continueJourney,
-              onPressed: _nextPage,
+              onPressed: _isLoading ? null : _nextPage,
+              isLoading: _isLoading,
             ),
             const SizedBox(height: 24),
           ],
@@ -251,12 +280,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _buildWelcomePage() {
+  Widget _buildWelcomePage(double keyboardHeight) {
     final colorScheme = Theme.of(context).colorScheme;
     final themeProvider = context.watch<ThemeProvider>();
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.fromLTRB(24, 24, 24, 24 + keyboardHeight),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -350,7 +379,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 40),
           GradientButton(
             text: AppLocalizations.of(context)!.startJourney,
-            onPressed: _nextPage,
+            onPressed: _isLoading ? null : _nextPage,
+            isLoading: _isLoading,
           ),
         ],
       ),
@@ -420,7 +450,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     }
   }
 
-  Widget _buildGoalsPage() {
+  Widget _buildGoalsPage(double keyboardHeight) {
     final colorScheme = Theme.of(context).colorScheme;
     final loc = AppLocalizations.of(context)!;
     final goals = [
