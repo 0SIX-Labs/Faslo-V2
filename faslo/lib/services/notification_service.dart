@@ -24,7 +24,13 @@ class NotificationService {
     final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>();
 
-    await androidPlugin?.requestNotificationsPermission();
+    if (androidPlugin != null) {
+      try {
+        await androidPlugin.requestNotificationsPermission();
+      } catch (e) {
+        debugPrint('Notification permission request failed: $e');
+      }
+    }
 
     _initialised = true;
   }
@@ -156,7 +162,7 @@ class NotificationService {
   }
 
   static Future<void> updateOngoingNotification(
-      String locale, DateTime endTime) async {
+      String locale, DateTime endTime, bool is24h) async {
     if (endTime.isBefore(DateTime.now())) {
       await _plugin.cancel(0);
       return;
@@ -167,9 +173,33 @@ class NotificationService {
     final minutes = diff.inMinutes.remainder(60);
     final l10n = await AppLocalizations.delegate.load(Locale(locale));
 
+    // Format end time display
+    final now = DateTime.now();
+    final isToday = endTime.day == now.day &&
+        endTime.month == now.month &&
+        endTime.year == now.year;
+
+    String timeStr;
+    if (is24h) {
+      timeStr =
+          '${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')}';
+    } else {
+      final hour = endTime.hour > 12
+          ? endTime.hour - 12
+          : endTime.hour == 0
+              ? 12
+              : endTime.hour;
+      final period = endTime.hour >= 12 ? 'PM' : 'AM';
+      timeStr = '$hour:${endTime.minute.toString().padLeft(2, '0')} $period';
+    }
+
+    final endText = isToday
+        ? 'Fasting ends today at $timeStr'
+        : 'Fasting ends tomorrow at $timeStr';
+
     await _plugin.show(
       0,
-      l10n.fastingActiveTitle,
+      endText,
       l10n.fastingActiveBody(hours, minutes),
       NotificationDetails(
         android: AndroidNotificationDetails(

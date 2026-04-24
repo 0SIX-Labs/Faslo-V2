@@ -10,6 +10,7 @@ import 'providers/wellness_provider.dart';
 import 'core/constants/pref_keys.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 import 'screens/home/home_screen.dart';
+import 'widgets/clock_loading_animation.dart';
 
 class FadeSlideTransition extends PageRouteBuilder {
   final Widget page;
@@ -121,11 +122,15 @@ class _FasloAppState extends State<FasloApp> with WidgetsBindingObserver {
         Locale('ko'),
         Locale('hi'),
       ],
-      home: _onboardingDone == null
-          ? const Scaffold(body: Center(child: CircularProgressIndicator()))
-          : _onboardingDone!
-              ? const HomeScreen()
-              : const OnboardingScreen(),
+      home: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 400),
+        switchInCurve: Curves.easeOutCubic,
+        child: _onboardingDone == null
+            ? const Scaffold(body: Center(child: ClockLoadingAnimation()))
+            : _onboardingDone!
+                ? const HomeScreen()
+                : const OnboardingScreen(),
+      ),
     );
   }
 }

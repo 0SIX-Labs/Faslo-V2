@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../core/theme/theme_provider.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/constants/pref_keys.dart';
 import '../../providers/settings_provider.dart';
 import '../../providers/fast_provider.dart';
 
@@ -218,6 +219,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildSection(
               'Notifications',
               [
+                SwitchListTile(
+                  title: const Text('Enable notifications'),
+                  subtitle: Text(settingsProvider.notifEnabled
+                      ? 'Notifications are active'
+                      : 'All notifications disabled'),
+                  value: settingsProvider.notifEnabled,
+                  onChanged: (v) =>
+                      settingsProvider.setNotif(PrefKeys.notifEnabled, v),
+                ),
+                const Divider(height: 8),
                 SwitchListTile(
                   title: const Text('Fast complete alert'),
                   value: settingsProvider.notifFastEnd,

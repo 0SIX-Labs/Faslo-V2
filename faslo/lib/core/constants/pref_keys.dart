@@ -16,5 +16,6 @@ class PrefKeys {
   static const String notifHalfway = 'notif_halfway';
   static const String notifKetosis = 'notif_ketosis';
   static const String notifWater = 'notif_water';
+  static const String notifEnabled = 'notif_enabled';
   static const String waterGoal = 'water_goal'; // int, default 8
 }

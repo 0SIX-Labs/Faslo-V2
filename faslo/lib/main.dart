@@ -15,37 +15,58 @@ import 'models/water_entry.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Hive
-  await Hive.initFlutter();
-  Hive.registerAdapter(FastSessionAdapter());
-  Hive.registerAdapter(WaterEntryAdapter());
-  await Hive.openBox<FastSession>('fast_sessions');
-  await Hive.openBox<int>('water_entries');
+  // Declare providers in outer scope so they are available after try/catch
+  ThemeProvider themeProvider = ThemeProvider();
+  SettingsProvider settingsProvider = SettingsProvider();
+  FastProvider fastProvider = FastProvider();
+  WellnessProvider wellnessProvider = WellnessProvider();
 
-  await NotificationService.init();
+  try {
+    // Initialize Hive with timeout protection
+    await Hive.initFlutter().timeout(const Duration(seconds: 5));
+    Hive.registerAdapter(FastSessionAdapter());
+    Hive.registerAdapter(WaterEntryAdapter());
 
-  // Lock portrait
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+    await Future.wait([
+      Hive.openBox<FastSession>('fast_sessions')
+          .timeout(const Duration(seconds: 3)),
+      Hive.openBox<int>('water_entries').timeout(const Duration(seconds: 3)),
+    ]).timeout(const Duration(seconds: 5));
 
-  // Init providers
-  final themeProvider = ThemeProvider();
-  final settingsProvider = SettingsProvider();
-  final fastProvider = FastProvider();
-  final wellnessProvider = WellnessProvider();
+    // Initialize notifications with fallback
+    try {
+      await NotificationService.init().timeout(const Duration(seconds: 4));
+    } catch (e) {
+      // Continue even if notifications fail to initialize
+      debugPrint('Notification init failed: $e');
+    }
 
-  await Future.wait([
-    themeProvider.init(),
-    settingsProvider.init(),
-    fastProvider.init(),
-    wellnessProvider.init(),
-  ]);
+    // Lock portrait
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]).timeout(const Duration(seconds: 2));
 
-  // Prune old data (runs at most once per day)
-  DataPruning.pruneIfNeeded();
+    await Future.wait([
+      themeProvider.init(),
+      settingsProvider.init(),
+      fastProvider.init(),
+      wellnessProvider.init(),
+    ]).timeout(const Duration(seconds: 8), onTimeout: () => []);
 
+    // Prune old data (runs at most once per day)
+    try {
+      DataPruning.pruneIfNeeded();
+    } catch (e) {
+      debugPrint('Data pruning failed: $e');
+    }
+  } catch (e, stackTrace) {
+    debugPrint('CRITICAL INIT ERROR: $e');
+    debugPrint('Stack trace: $stackTrace');
+    // Continue execution even if something breaks - at least app will open
+  }
+
+  // Always run the app regardless of init issues
   runApp(
     MultiProvider(
       providers: [

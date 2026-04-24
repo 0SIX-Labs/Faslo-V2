@@ -9,6 +9,7 @@ import '../core/constants/fasting_plans.dart';
 import '../core/utils/debounce.dart';
 import '../models/fast_session.dart';
 import '../services/notification_service.dart';
+import 'settings_provider.dart';
 
 class FastProvider extends ChangeNotifier {
   FastingPlan _activePlan = fastingPlans[2]; // 16:8 default
@@ -123,7 +124,7 @@ class FastProvider extends ChangeNotifier {
     _elapsed = _fastStart != null
         ? DateTime.now().difference(_fastStart!)
         : Duration.zero;
-    _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
+    _ticker = Timer.periodic(const Duration(seconds: 1), (_) async {
       if (_fastStart != null) {
         _elapsed = DateTime.now().difference(_fastStart!);
 
@@ -131,7 +132,15 @@ class FastProvider extends ChangeNotifier {
         if (_elapsed.inSeconds % 60 == 0) {
           final endTime =
               _fastStart!.add(Duration(hours: _activePlan.fastHours));
-          NotificationService.updateOngoingNotification('en', endTime);
+          final prefs = await SharedPreferences.getInstance();
+          final notifEnabled = prefs.getBool(PrefKeys.notifEnabled) ?? true;
+          final is24h = prefs.getString(PrefKeys.clockFormat) != '12h';
+
+          if (notifEnabled) {
+            NotificationService.updateOngoingNotification('en', endTime, is24h);
+          } else {
+            NotificationService.cancelOngoing();
+          }
         }
 
         notifyListeners();
@@ -178,30 +187,43 @@ class FastProvider extends ChangeNotifier {
       targetHours: _activePlan.fastHours,
       completed: true,
     );
+
+    // ✅ RESET STATE FIRST - BEFORE ANY ASYNC OPERATIONS
     _fastStart = null;
     _elapsed = Duration.zero;
 
-    // Cancel all scheduled notifications and ongoing notification
-    await NotificationService.cancelOngoing();
-    await NotificationService.cancelAll();
-
-    // Show completion notification if fast was at least 1 hour
-    if (hours >= 1) {
-      await NotificationService.showFastComplete('en', hours);
-    }
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(PrefKeys.activeFastStart);
-      // Save to Hive with timestamp-based key for ordering
-      final box = Hive.box<FastSession>('fast_sessions');
-      final key = '${session.startTime.millisecondsSinceEpoch}_${session.id}';
-      await box.put(key, session);
-      // Reload recent sessions
-      _sessions = getRecentSessions(100);
-    } catch (e) {
-      // Continue even if save fails
-    }
+    // ✅ NOTIFY LISTENERS IMMEDIATELY FOR INSTANT UI UPDATE
     notifyListeners();
+
+    // ✅ RUN ALL ASYNC OPERATIONS IN BACKGROUND WITHOUT BLOCKING UI
+    // ignore: unawaited_futures
+    () async {
+      try {
+        // Cancel all scheduled notifications and ongoing notification
+        await NotificationService.cancelOngoing();
+        await NotificationService.cancelAll();
+
+        // Show completion notification if fast was at least 1 hour
+        if (hours >= 1) {
+          await NotificationService.showFastComplete('en', hours);
+        }
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove(PrefKeys.activeFastStart);
+
+        // Save to Hive with timestamp-based key for ordering
+        final box = Hive.box<FastSession>('fast_sessions');
+        final key = '${session.startTime.millisecondsSinceEpoch}_${session.id}';
+        await box.put(key, session);
+
+        // Reload recent sessions and notify again when data is saved
+        _sessions = getRecentSessions(100);
+        notifyListeners();
+      } catch (e) {
+        // Continue even if save fails
+      }
+    }();
+
     return session;
   }
 

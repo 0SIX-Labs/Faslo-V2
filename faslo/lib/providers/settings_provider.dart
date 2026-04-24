@@ -10,6 +10,7 @@ class SettingsProvider extends ChangeNotifier {
   int _waterGoal = 8;
 
   // Notifications
+  bool _notifEnabled = true;
   bool _notifFastEnd = true;
   bool _notifHalfway = true;
   bool _notifKetosis = true;
@@ -20,6 +21,7 @@ class SettingsProvider extends ChangeNotifier {
   bool get is24h => _is24h;
   String get userName => _userName;
   int get waterGoal => _waterGoal;
+  bool get notifEnabled => _notifEnabled;
   bool get notifFastEnd => _notifFastEnd;
   bool get notifHalfway => _notifHalfway;
   bool get notifKetosis => _notifKetosis;
@@ -33,6 +35,7 @@ class SettingsProvider extends ChangeNotifier {
       _is24h = prefs.getString(PrefKeys.clockFormat) != '12h';
       _userName = prefs.getString(PrefKeys.userName) ?? '';
       _waterGoal = prefs.getInt(PrefKeys.waterGoal) ?? 8;
+      _notifEnabled = prefs.getBool(PrefKeys.notifEnabled) ?? true;
       _notifFastEnd = prefs.getBool(PrefKeys.notifFastEnd) ?? true;
       _notifHalfway = prefs.getBool(PrefKeys.notifHalfway) ?? true;
       _notifKetosis = prefs.getBool(PrefKeys.notifKetosis) ?? true;
@@ -94,6 +97,7 @@ class SettingsProvider extends ChangeNotifier {
     } catch (e) {
       // Continue even if save fails
     }
+    if (key == PrefKeys.notifEnabled) _notifEnabled = v;
     if (key == PrefKeys.notifFastEnd) _notifFastEnd = v;
     if (key == PrefKeys.notifHalfway) _notifHalfway = v;
     if (key == PrefKeys.notifKetosis) _notifKetosis = v;

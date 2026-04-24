@@ -146,6 +146,7 @@ class _HomeScreenState extends State<HomeScreen>
               child: SizedBox(
                 height: MediaQuery.of(context).size.height -
                     MediaQuery.of(context).padding.top -
+                    MediaQuery.of(context).padding.bottom -
                     80,
                 child: Column(
                   children: [
