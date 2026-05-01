@@ -88,7 +88,8 @@ class _FasloAppState extends State<FasloApp> with WidgetsBindingObserver {
 
   Future<void> _checkOnboarding() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = await SharedPreferences.getInstance()
+          .timeout(const Duration(seconds: 3));
       setState(() {
         _onboardingDone = prefs.getBool(PrefKeys.onboardingDone) ?? false;
       });

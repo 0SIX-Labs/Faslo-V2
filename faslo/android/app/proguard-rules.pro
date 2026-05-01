@@ -56,3 +56,12 @@
 -dontwarn com.google.android.play.core.splitcompat.**
 -dontwarn com.google.android.play.core.splitinstall.**
 -dontwarn com.google.android.play.core.tasks.**
+
+# AndroidX Core - Required by flutter_local_notifications for release builds
+-keep class androidx.core.app.** { *; }
+-keep class androidx.core.content.** { *; }
+-keep class androidx.core.graphics.drawable.** { *; }
+
+# Prevent stripping of Flutter JNI classes
+-keep class io.flutter.embedding.engine.** { *; }
+-keep class io.flutter.plugin.platform.** { *; }

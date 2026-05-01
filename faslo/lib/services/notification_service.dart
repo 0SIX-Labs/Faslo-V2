@@ -20,10 +20,14 @@ class NotificationService {
     await _plugin.initialize(
       const InitializationSettings(android: android, iOS: ios),
     );
-    // Request Android 13+ notification permission
+    _initialised = true;
+  }
+
+  /// Request Android 13+ notification permission.
+  /// Call this AFTER the app UI is shown, never during cold-start init.
+  static Future<void> requestPermission() async {
     final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>();
-
     if (androidPlugin != null) {
       try {
         await androidPlugin.requestNotificationsPermission();
@@ -31,8 +35,6 @@ class NotificationService {
         debugPrint('Notification permission request failed: $e');
       }
     }
-
-    _initialised = true;
   }
 
   static AndroidNotificationDetails _androidDetails(
