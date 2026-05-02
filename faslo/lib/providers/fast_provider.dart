@@ -9,7 +9,6 @@ import '../core/constants/fasting_plans.dart';
 import '../core/utils/debounce.dart';
 import '../models/fast_session.dart';
 import '../services/notification_service.dart';
-import 'settings_provider.dart';
 
 class FastProvider extends ChangeNotifier {
   FastingPlan _activePlan = fastingPlans[2]; // 16:8 default
